@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+
+        <record id="action_stock_picking_modality" model="ir.actions.act_window">
+            <field name="name">Stock picking modality</field>
+            <field name="res_model">stock.picking.modality</field>
+            <field name="view_mode">tree,form</field>
+        </record>
+
+        <record id="view_stock_picking_modality_tree" model="ir.ui.view">
+            <field name="name">stock.picking.modality.tree</field>
+            <field name="model">stock.picking.modality</field>
+            <field name="arch" type="xml">
+                <tree>
+                    <field name="name"/>
+                    <field name="price"/>
+                </tree>
+            </field>
+        </record>
+
+        <menuitem id="stock_picking_modality_menu"
+                  name="Stock picking modality"
+                  parent="stock.menu_stock_root"
+                  sequence="40"
+                  action="action_stock_picking_modality"/>
+    </data>
+</odoo>
+
