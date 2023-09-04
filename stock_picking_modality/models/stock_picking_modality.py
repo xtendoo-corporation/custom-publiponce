@@ -8,8 +8,14 @@ class StockPickingModality(models.Model):
     _name = 'stock.picking.modality'
 
     name = fields.Char(
-        string='Name',
+        string='Nombre',
     )
     price = fields.Float(
-        string='Price',
+        string='Precio',
     )
+    modality = fields.One2many(
+        comodel_name='stock.picking.line',
+        inverse_name='modality_id',
+        string='Tipo',
+    )
+

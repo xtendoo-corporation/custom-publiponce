@@ -1,7 +1,5 @@
-<?xml version="1.0" encoding="utf-8"?>
 <odoo>
     <data>
-
         <record id="action_stock_picking_modality" model="ir.actions.act_window">
             <field name="name">Stock picking modality</field>
             <field name="res_model">stock.picking.modality</field>
@@ -15,15 +13,15 @@
                 <tree>
                     <field name="name"/>
                     <field name="price"/>
+                    <field name="modality"/>
                 </tree>
             </field>
         </record>
 
         <menuitem id="stock_picking_modality_menu"
                   name="Stock picking modality"
-                  parent="stock.menu_stock_root"
+                  parent="stock.menu_stock_warehouse_mgmt"
                   sequence="40"
                   action="action_stock_picking_modality"/>
     </data>
 </odoo>
-
