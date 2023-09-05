@@ -15,6 +15,7 @@
         [
             "security/ir.model.access.csv",
             "views/stock_picking_modality_view.xml",
+            "views/view_picking_form.xml",
         ],
     'installable': True,
     'active': False,
