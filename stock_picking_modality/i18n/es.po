@@ -1,0 +1,83 @@
+# Translation of Odoo Server.
+# This file contains the translation of the following modules:
+# 	* stock_picking_modality
+#
+msgid ""
+msgstr ""
+"Project-Id-Version: Odoo Server 16.0\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2023-09-05 09:54+0000\n"
+"PO-Revision-Date: 2023-09-05 09:54+0000\n"
+"Last-Translator: \n"
+"Language-Team: \n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: \n"
+"Plural-Forms: \n"
+
+#. module: stock_picking_modality
+#: model:ir.model.fields,field_description:stock_picking_modality.field_stock_picking_modality__create_uid
+msgid "Created by"
+msgstr "Creado por"
+
+#. module: stock_picking_modality
+#: model:ir.model.fields,field_description:stock_picking_modality.field_stock_picking_modality__create_date
+msgid "Created on"
+msgstr "Creado en"
+
+#. module: stock_picking_modality
+#: model:ir.model.fields,field_description:stock_picking_modality.field_stock_picking_modality__display_name
+msgid "Display Name"
+msgstr "Nombre a mostrar"
+
+#. module: stock_picking_modality
+#: model:ir.model.fields,field_description:stock_picking_modality.field_stock_picking_modality__id
+msgid "ID"
+msgstr "ID"
+
+#. module: stock_picking_modality
+#: model:ir.model.fields,field_description:stock_picking_modality.field_stock_picking_modality____last_update
+msgid "Last Modified on"
+msgstr "última modificación"
+
+#. module: stock_picking_modality
+#: model:ir.model.fields,field_description:stock_picking_modality.field_stock_picking_modality__write_uid
+msgid "Last Updated by"
+msgstr "Última actualización por"
+
+#. module: stock_picking_modality
+#: model:ir.model.fields,field_description:stock_picking_modality.field_stock_picking_modality__write_date
+msgid "Last Updated on"
+msgstr "Última actualización"
+
+#. module: stock_picking_modality
+#: model:ir.model.fields,field_description:stock_picking_modality.field_stock_move__modality_id
+msgid "Modality"
+msgstr "Modalidad"
+
+#. module: stock_picking_modality
+#: model:ir.model.fields,field_description:stock_picking_modality.field_stock_picking_modality__name
+msgid "Name"
+msgstr "Nombre"
+
+#. module: stock_picking_modality
+#: model:ir.model.fields,field_description:stock_picking_modality.field_stock_move__price
+#: model:ir.model.fields,field_description:stock_picking_modality.field_stock_picking_modality__price
+msgid "Price"
+msgstr "Precio"
+
+#. module: stock_picking_modality
+#: model:ir.model,name:stock_picking_modality.model_stock_move
+msgid "Stock Move"
+msgstr "Movimiento de existencias"
+
+#. module: stock_picking_modality
+#: model:ir.actions.act_window,name:stock_picking_modality.action_stock_picking_modality
+#: model:ir.ui.menu,name:stock_picking_modality.stock_picking_modality_menu
+msgid "Stock picking modality"
+msgstr "Selección de modalidad de entrega"
+
+#. module: stock_picking_modality
+#: model:ir.model,name:stock_picking_modality.model_stock_picking_modality
+msgid "stock.picking.modality"
+msgstr "stock.picking.modality"
