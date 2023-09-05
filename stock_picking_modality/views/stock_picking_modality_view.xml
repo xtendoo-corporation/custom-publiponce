@@ -13,7 +13,6 @@
                 <tree>
                     <field name="name"/>
                     <field name="price"/>
-                    <field name="modality"/>
                 </tree>
             </field>
         </record>

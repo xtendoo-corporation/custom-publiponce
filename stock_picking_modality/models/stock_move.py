@@ -5,18 +5,17 @@ from odoo import api, fields, models
 
 
 class StockMove(models.Model):
-    _name = 'stock.move'
+    _inherit = 'stock.move'
 
     modality_id = fields.Many2one(
         comodel_name='stock.picking.modality',
         string='Modality',
     )
     price = fields.Float(
-        comoodel_name='stock.picking.modality',
         string='Price',
     )
 
-    @api.onchange('picking_id.modality_id.price')
-    def _onchange_price(self):
+    @api.onchange('modality_id')
+    def _on_change_price(self):
         for move in self:
-            move.price = move.picking_id.modality_id.price
+            move.price = move.modality_id.price

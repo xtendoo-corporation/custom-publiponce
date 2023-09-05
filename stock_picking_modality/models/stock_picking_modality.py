@@ -13,9 +13,9 @@ class StockPickingModality(models.Model):
     price = fields.Float(
         string='Price',
     )
-    modality = fields.One2many(
-        comodel_name='stock.picking.line',
-        inverse_name='modality_id',
-        string='Modality',
-    )
+    # modality = fields.One2many(
+    #     comodel_name='stock.picking.line',
+    #     inverse_name='modality_id',
+    #     string='Modality',
+    # )
 
