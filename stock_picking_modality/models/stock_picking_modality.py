@@ -13,9 +13,18 @@ class StockPickingModality(models.Model):
     price = fields.Float(
         string='Price',
     )
-    # modality = fields.One2many(
-    #     comodel_name='stock.picking.line',
-    #     inverse_name='modality_id',
-    #     string='Modality',
-    # )
+    stock_move_ids = fields.One2many(
+        comodel_name='stock.move',
+        inverse_name='modality_id',
+        string='Stock Moves'
+    )
+    stock_move_count = fields.Integer(
+        string='Stock Move Lines Count',
+        compute='_compute_stock_move_count'
+    )
+
+    @api.depends('stock_move_ids')
+    def _compute_stock_move_count(self):
+        for modality in self:
+            modality.stock_move_count = len(modality.stock_move_ids)
 
