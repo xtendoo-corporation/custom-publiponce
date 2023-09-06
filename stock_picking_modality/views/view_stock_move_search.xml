@@ -1,0 +1,15 @@
+<!--<odoo>-->
+<!--    <data>-->
+
+<!--        <record id="view_stock_move_search" model="ir.ui.view">-->
+<!--            <field name="name">stock.move.search</field>-->
+<!--            <field name="model">stock.move</field>-->
+<!--            <field name="arch" type="xml">-->
+<!--                <search>-->
+<!--                    <field name="modality_id"/>-->
+<!--                </search>-->
+<!--            </field>-->
+<!--        </record>-->
+
+<!--    </data>-->
+<!--</odoo>-->
