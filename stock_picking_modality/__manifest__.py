@@ -17,8 +17,6 @@
             "views/stock_picking_modality_view.xml",
             "views/view_picking_form.xml",
             "views/view_stock_move.xml",
-            # "views/view_stock_move_filtered.xml",
-            # "views/view_stock_move_search.xml",
         ],
     'installable': True,
     'active': False,

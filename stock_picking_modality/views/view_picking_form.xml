@@ -1,7 +1,7 @@
 <odoo>
     <data>
         <record id="view_stock_picking_line_custom" model="ir.ui.view">
-            <field name="name">stock.picking.line.custom.form</field>
+            <field name="name">stock.picking.custom.form</field>
             <field name="model">stock.picking</field>
             <field name="inherit_id" ref="stock.view_picking_form"/>
             <field name="arch" type="xml">

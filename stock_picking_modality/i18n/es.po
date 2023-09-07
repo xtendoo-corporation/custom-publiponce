@@ -6,8 +6,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 16.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2023-09-05 09:54+0000\n"
-"PO-Revision-Date: 2023-09-05 09:54+0000\n"
+"POT-Creation-Date: 2023-09-07 09:50+0000\n"
+"PO-Revision-Date: 2023-09-07 09:50+0000\n"
 "Last-Translator: \n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
@@ -33,7 +33,7 @@ msgstr "Nombre a mostrar"
 #. module: stock_picking_modality
 #: model:ir.model.fields,field_description:stock_picking_modality.field_stock_picking_modality__id
 msgid "ID"
-msgstr "ID"
+msgstr ""
 
 #. module: stock_picking_modality
 #: model:ir.model.fields,field_description:stock_picking_modality.field_stock_picking_modality____last_update
@@ -72,12 +72,23 @@ msgid "Stock Move"
 msgstr "Movimiento de existencias"
 
 #. module: stock_picking_modality
+#: model:ir.model.fields,field_description:stock_picking_modality.field_stock_picking_modality__stock_move_count
+msgid "Stock Move Lines Count"
+msgstr "Contador de líneas de movimiento de existencias"
+
+#. module: stock_picking_modality
+#: model:ir.model.fields,field_description:stock_picking_modality.field_stock_picking_modality__stock_move_ids
+#: model_terms:ir.ui.view,arch_db:stock_picking_modality.view_stock_picking_modality_form
+msgid "Stock Moves"
+msgstr "movimientos de existencias"
+
+#. module: stock_picking_modality
 #: model:ir.actions.act_window,name:stock_picking_modality.action_stock_picking_modality
 #: model:ir.ui.menu,name:stock_picking_modality.stock_picking_modality_menu
 msgid "Stock picking modality"
-msgstr "Selección de modalidad de entrega"
+msgstr "Modalidad de entrega"
 
 #. module: stock_picking_modality
 #: model:ir.model,name:stock_picking_modality.model_stock_picking_modality
 msgid "stock.picking.modality"
-msgstr "stock.picking.modality"
+msgstr ""
