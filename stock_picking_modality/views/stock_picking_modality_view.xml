@@ -22,14 +22,17 @@
             <field name="model">stock.picking.modality</field>
             <field name="arch" type="xml">
                 <form editable="top">
-                    <field name="name"/>
-                    <field name="price"/>
-                    <div name="button_box" position="inside">
+                    <header>
                         <button name="action_open_stock_move_filtered" type="object"
-                                class="oe_stat_button" icon="fa-table">
+                                class="oe_stat_button" icon="fa-table"
+                                align="left">
                             Stock Moves
                         </button>
-                    </div>
+                    </header>
+                    <group colspan="4">
+                        <field name="name"/>
+                        <field name="price"/>
+                    </group>
                 </form>
             </field>
         </record>
