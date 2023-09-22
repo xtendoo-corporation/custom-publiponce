@@ -4,8 +4,8 @@
 from odoo import api, fields, models
 
 
-class StockMove(models.Model):
-    _inherit = 'stock.move'
+class StockMoveLine(models.Model):
+    _inherit = 'stock.move.line'
 
     modality_id = fields.Many2one(
         comodel_name='stock.picking.modality',
@@ -19,15 +19,11 @@ class StockMove(models.Model):
         compute='_compute_total_price',
         store=True,
     )
-    lot_id = fields.Many2one(
-        comodel_name='stock.lot',
-        string='Lote/Nº de serie',
-    )
 
-    @api.depends('product_uom_qty', 'price')
+    @api.depends('qty_done', 'price')
     def _compute_total_price(self):
         for move in self:
-            move.total_price = move.product_uom_qty * move.price
+            move.total_price = move.qty_done * move.price
 
     @api.onchange('modality_id')
     def _on_change_price(self):

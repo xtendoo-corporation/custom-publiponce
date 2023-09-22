@@ -26,6 +26,11 @@ class StockPickingModality(models.Model):
         string='Stock Move Lines Count',
         compute='_compute_stock_move_count'
     )
+    line_qty = fields.Integer(
+        string='Cantidad de lineas',
+        readonly=False,
+        store=True,
+    )
 
     @api.depends('stock_move_ids')
     def _compute_stock_move_count(self):

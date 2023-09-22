@@ -32,6 +32,7 @@
                     <group colspan="4">
                         <field name="name"/>
                         <field name="price"/>
+                        <field name="line_qty"/>
                     </group>
                 </form>
             </field>

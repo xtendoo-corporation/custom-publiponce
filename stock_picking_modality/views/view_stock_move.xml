@@ -8,7 +8,15 @@
             <field name="arch" type="xml">
                 <xpath expr="//field[@name='product_id']" position="after">
                     <field name="modality_id"/>
+                </xpath>
+                <xpath expr="//field[@name='product_uom_qty']" position="before">
                     <field name="price"/>
+                </xpath>
+                <xpath expr="//field[@name='product_uom_qty']" position="after">
+                    <field name="total_price"/>
+                </xpath>
+                <xpath expr="//field[@name='product_uom_qty']" position="after">
+                    <field name="lot_id"/>
                 </xpath>
             </field>
         </record>
