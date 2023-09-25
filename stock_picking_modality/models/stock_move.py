@@ -33,3 +33,5 @@ class StockMove(models.Model):
     def _on_change_price(self):
         for move in self:
             move.price = move.modality_id.price
+
+
