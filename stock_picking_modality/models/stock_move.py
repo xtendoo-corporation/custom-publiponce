@@ -20,8 +20,7 @@ class StockMove(models.Model):
         store=True,
     )
     lot_id = fields.Many2one(
-        comodel_name='stock.lot',
-        string='Lote/Nº de serie',
+        related='move_line_ids.lot_id',
     )
 
     @api.depends('product_uom_qty', 'price')
