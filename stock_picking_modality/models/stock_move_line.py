@@ -8,24 +8,11 @@ class StockMoveLine(models.Model):
     _inherit = 'stock.move.line'
 
     modality_id = fields.Many2one(
-        comodel_name='stock.picking.modality',
-        string='Modality',
+        related='move_id.modality_id',
     )
     price = fields.Float(
-        string='Price',
+        related='modality_id.price',
     )
     total_price = fields.Float(
-        string='Precio total',
-        compute='_compute_total_price',
-        store=True,
+        related='move_id.total_price',
     )
-
-    @api.depends('qty_done', 'price')
-    def _compute_total_price(self):
-        for move in self:
-            move.total_price = move.qty_done * move.price
-
-    @api.onchange('modality_id')
-    def _on_change_price(self):
-        for move in self:
-            move.price = move.modality_id.price

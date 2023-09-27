@@ -22,6 +22,11 @@ class StockMove(models.Model):
     lot_id = fields.Many2one(
         related='move_line_ids.lot_id',
     )
+    destiny = fields.Selection(
+        selection=[('ciudad', 'Ciudad'), ('provincia_cercana', 'Provincia cercana'),
+                   ('provincia_lejana', 'Provincia lejana')],
+        string='Destino',
+    )
 
     @api.depends('product_uom_qty', 'price')
     def _compute_total_price(self):
@@ -33,4 +38,21 @@ class StockMove(models.Model):
         for move in self:
             move.price = move.modality_id.price
 
-
+    @api.onchange('modality_id', 'destiny')
+    def _on_change_price(self):
+        for move in self:
+            if move.modality_id and move.destiny == 'ciudad':
+                if move.modality_id.name == 'Simple':
+                    move.price = 14.0
+                else:
+                    move.price = 14.0 / 2
+            if move.modality_id and move.destiny == 'provincia_cercana':
+                if move.modality_id.name == 'Simple':
+                    move.price = 9.0
+                else:
+                    move.price = 9.0 / 2
+            if move.modality_id and move.destiny == 'provincia_lejana':
+                if move.modality_id.name == 'Simple':
+                    move.price = 11.0
+                else:
+                    move.price = 11.0 / 2
