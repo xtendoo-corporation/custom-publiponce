@@ -18,6 +18,9 @@
                     <field name="modality_id"/>
                     <field name="destiny"/>
                     <field name="price"/>
+                </xpath>
+                <xpath expr="/form/sheet/notebook/page[@name='operations']/field[@name='move_ids_without_package']/tree/field[@name='product_uom_qty']"
+                    position="after">
                     <field name="total_price"/>
                 </xpath>
             </field>
