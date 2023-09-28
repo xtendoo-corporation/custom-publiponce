@@ -1,0 +1,41 @@
+<odoo>
+    <data>
+        <record id="action_rate_picking_modality_price" model="ir.actions.act_window">
+            <field name="name">Rates</field>
+            <field name="res_model">rate.picking.modality.price</field>
+            <field name="view_mode">tree,form</field>
+        </record>
+
+        <record id="view_rate_picking_modality_price_tree" model="ir.ui.view">
+            <field name="name">rate.picking.modality.price.tree</field>
+            <field name="model">rate.picking.modality.price</field>
+            <field name="arch" type="xml">
+                <tree>
+                    <field name="rate_id"/>
+                    <field name="modality_id"/>
+                    <field name="price"/>
+                </tree>
+            </field>
+        </record>
+
+        <record id="view_rate_picking_modality_price_form" model="ir.ui.view">
+            <field name="name">rate.picking.modality.price.form</field>
+            <field name="model">rate.picking.modality.price</field>
+            <field name="arch" type="xml">
+                <form editable="top">
+                    <group>
+                        <field name="rate_id"/>
+                        <field name="modality_id"/>
+                        <field name="price"/>
+                    </group>
+                </form>
+            </field>
+        </record>
+
+        <menuitem id="rate_picking_modality_price_menu"
+                  name="Rates"
+                  parent="stock.menu_stock_warehouse_mgmt"
+                  sequence="50"
+                  action="action_rate_picking_modality_price"/>
+    </data>
+</odoo>

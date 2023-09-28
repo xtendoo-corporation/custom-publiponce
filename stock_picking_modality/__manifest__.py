@@ -19,6 +19,7 @@
             "views/view_stock_move.xml",
             # "views/view_stock_move_line.xml",
             "views/rate_picking_destiny_view.xml",
+            "views/rate_picking_modality_price_view.xml",
         ],
     'installable': True,
     'active': False,
