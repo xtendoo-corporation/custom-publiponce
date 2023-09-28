@@ -1,7 +1,7 @@
 # Copyright 2023 Jaime Millan (https://xtendoo.es)
 # License AGPL-3.0 or later (http://www.gnu.org/licenses/agpl.html).
 
-from odoo import api, fields, models, exceptions
+from odoo import api, fields, models
 
 
 class StockPickingModality(models.Model):
@@ -9,11 +9,6 @@ class StockPickingModality(models.Model):
 
     name = fields.Char(
         string='Name',
-        readonly=False,
-        store=True,
-    )
-    price = fields.Float(
-        string='Price',
         readonly=False,
         store=True,
     )
@@ -26,6 +21,11 @@ class StockPickingModality(models.Model):
         string='Cantidad de lineas',
         readonly=False,
         store=True,
+    )
+    rate_id = fields.Many2many(
+        comodel_name='rate.picking.destiny',
+        inverse_name='modality_id',
+        string='Destiny',
     )
 
     def action_open_stock_move_filtered(self):

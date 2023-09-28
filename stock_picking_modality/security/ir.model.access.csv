@@ -1,2 +1,4 @@
 id,name,model_id:id,group_id:id,perm_read,perm_write,perm_create,perm_unlink
 access_stock_picking_modality,stock.picking.modality,model_stock_picking_modality,,1,1,1,1
+access_rate_picking_destiny,rate.picking.destiny,model_rate_picking_destiny,,1,1,1,1
+access_rate_picking_modality_price,rate.picking.modality.price,model_rate_picking_modality_price,,1,1,1,1

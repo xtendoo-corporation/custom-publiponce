@@ -10,6 +10,7 @@
                 </xpath>
                 <xpath expr="//field[@name='product_uom_qty']" position="before">
                     <field name="modality_id"/>
+                    <field name="rate_id"/>
                     <field name="price"/>
                 </xpath>
                 <xpath expr="//field[@name='product_uom_qty']" position="after">

@@ -11,8 +11,14 @@ class StockMove(models.Model):
         comodel_name='stock.picking.modality',
         string='Modality',
     )
+    modality_price_ids = fields.One2many(
+        comodel_name='rate.picking.modality.price',
+        related='rate_id.modality_price_ids',
+        string='Modalities and Prices',
+    )
     price = fields.Float(
-        string='Price',
+        string='Precio',
+        compute='_on_change_price',
     )
     total_price = fields.Float(
         string='Precio total',
@@ -22,10 +28,9 @@ class StockMove(models.Model):
     lot_id = fields.Many2one(
         related='move_line_ids.lot_id',
     )
-    destiny = fields.Selection(
-        selection=[('ciudad', 'Ciudad'), ('provincia_cercana', 'Provincia cercana'),
-                   ('provincia_lejana', 'Provincia lejana')],
-        string='Destino',
+    rate_id = fields.Many2one(
+        comodel_name='rate.picking.destiny',
+        string='Destiny',
     )
 
     @api.depends('product_uom_qty', 'price')
@@ -33,26 +38,10 @@ class StockMove(models.Model):
         for move in self:
             move.total_price = move.product_uom_qty * move.price
 
-    @api.onchange('modality_id')
+    @api.onchange('modality_id', 'rate_id')
     def _on_change_price(self):
         for move in self:
-            move.price = move.modality_id.price
-
-    @api.onchange('modality_id', 'destiny')
-    def _on_change_price(self):
-        for move in self:
-            if move.modality_id and move.destiny == 'ciudad':
-                if move.modality_id.name == 'Simple':
-                    move.price = 14.0
-                else:
-                    move.price = 14.0 / 2
-            if move.modality_id and move.destiny == 'provincia_cercana':
-                if move.modality_id.name == 'Simple':
-                    move.price = 9.0
-                else:
-                    move.price = 9.0 / 2
-            if move.modality_id and move.destiny == 'provincia_lejana':
-                if move.modality_id.name == 'Simple':
-                    move.price = 11.0
-                else:
-                    move.price = 11.0 / 2
+            modality_price = move.modality_price_ids.filtered(
+                lambda x: x.modality_id == move.modality_id and x.rate_id == move.rate_id
+            )
+            move.price = modality_price.price if modality_price else 0.0

@@ -11,6 +11,15 @@ class StockPicking(models.Model):
         comodel_name='stock.picking.modality',
         string='Modality',
     )
+    rate_id = fields.Many2one(
+        comodel_name='rate.picking.destiny',
+        string='Rate',
+    )
+    modality_price_ids = fields.One2many(
+        comodel_name='rate.picking.modality.price',
+        related='rate_id.modality_price_ids',
+        string='Modalities and Prices',
+    )
 
     def action_validate(self):
         max_line_qty = max(line.modality_id.line_qty for line in self.move_ids)
