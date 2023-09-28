@@ -124,7 +124,7 @@ msgstr "Precio"
 #: model:ir.model.fields,field_description:stock_picking_modality.field_rate_picking_modality_price__rate_id
 #: model:ir.model.fields,field_description:stock_picking_modality.field_stock_picking__rate_id
 msgid "Rate"
-msgstr "Tarifa"
+msgstr "Destino"
 
 #. module: stock_picking_modality
 #: model:ir.actions.act_window,name:stock_picking_modality.action_rate_picking_destiny
