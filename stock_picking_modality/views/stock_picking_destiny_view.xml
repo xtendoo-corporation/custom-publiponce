@@ -1,0 +1,43 @@
+<odoo>
+    <data>
+        <record id="action_stock_picking_destiny" model="ir.actions.act_window">
+            <field name="name">Destino de entregas</field>
+            <field name="res_model">stock.picking.destiny</field>
+            <field name="view_mode">tree,form</field>
+        </record>
+
+        <record id="view_stock_picking_destiny_tree" model="ir.ui.view">
+            <field name="name">stock.picking.destiny.tree</field>
+            <field name="model">stock.picking.destiny</field>
+            <field name="arch" type="xml">
+                <tree>
+                    <field name="name"/>
+                </tree>
+            </field>
+        </record>
+
+        <record id="view_stock_picking_destiny_form" model="ir.ui.view">
+            <field name="name">stock.picking.destiny.form</field>
+            <field name="model">stock.picking.destiny</field>
+            <field name="arch" type="xml">
+                <form editable="top">
+                    <group colspan="4">
+                        <field name="name"/>
+<!--                        <field name="modality_price_ids" widget="one2many_tags">-->
+<!--                            <tree>-->
+<!--                                <field name="modality_id"/>-->
+<!--                                <field name="price"/>-->
+<!--                            </tree>-->
+<!--                        </field>-->
+                    </group>
+                </form>
+            </field>
+        </record>
+
+        <menuitem id="stock_picking_destiny_menu"
+                  name="Destino de entregas"
+                  parent="stock.menu_stock_warehouse_mgmt"
+                  sequence="50"
+                  action="action_stock_picking_destiny"/>
+    </data>
+</odoo>

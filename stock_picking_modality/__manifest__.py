@@ -14,12 +14,12 @@
     "data":
         [
             "security/ir.model.access.csv",
-            "views/stock_picking_modality_view.xml",
             "views/view_picking_form.xml",
             "views/view_stock_move.xml",
             "views/view_stock_move_line.xml",
-            "views/rate_picking_destiny_view.xml",
-            "views/rate_picking_modality_price_view.xml",
+            "views/stock_picking_destiny_view.xml",
+            "views/stock_picking_modality_view.xml",
+            "views/stock_picking_modality_destiny_price_view.xml",
         ],
     'installable': True,
     'active': False,

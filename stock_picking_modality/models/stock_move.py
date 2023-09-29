@@ -11,11 +11,15 @@ class StockMove(models.Model):
         comodel_name='stock.picking.modality',
         string='Modality',
     )
-    modality_price_ids = fields.One2many(
-        comodel_name='rate.picking.modality.price',
-        related='rate_id.modality_price_ids',
-        string='Modalities and Prices',
+    destiny_id = fields.Many2one(
+        comodel_name='stock.picking.destiny',
+        string='Destiny',
     )
+    # modality_price_ids = fields.One2many(
+    #     comodel_name='rate.picking.modality.price',
+    #     related='rate_id.modality_price_ids',
+    #     string='Modalities and Prices',
+    # )
     price = fields.Float(
         string='Precio',
         compute='_on_change_price',
@@ -24,23 +28,21 @@ class StockMove(models.Model):
         string='Precio total',
         compute='_compute_total_price',
     )
-    lot_id = fields.Many2one(
-        related='move_line_ids.lot_id',
-    )
-    rate_id = fields.Many2one(
-        comodel_name='rate.picking.destiny',
-        string='Destiny',
-    )
+    # lot_ids = fields.Many2one(
+    #     related='move_line_ids.lot_ids',
+    # )
+
+    @api.onchange('modality_id', 'destiny_id')
+    def _on_change_price(self):
+        self.price = 0
+        for move in self:
+            modality_price = self.env['stock.picking.modality.destiny.price'].search(
+                [("modality_id", '=', move.modality_id.id), ("destiny_id", '=', move.destiny_id.id)], limit=1
+            )
+            if modality_price:
+                move.price = modality_price.price
 
     @api.depends('product_uom_qty', 'price')
     def _compute_total_price(self):
         for move in self:
             move.total_price = move.product_uom_qty * move.price
-
-    @api.onchange('modality_id', 'rate_id')
-    def _on_change_price(self):
-        for move in self:
-            modality_price = move.modality_price_ids.filtered(
-                lambda x: x.modality_id == move.modality_id and x.rate_id == move.rate_id
-            )
-            move.price = modality_price.price if modality_price else 0.0

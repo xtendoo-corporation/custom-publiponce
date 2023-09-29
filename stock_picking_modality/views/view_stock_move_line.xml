@@ -7,6 +7,7 @@
             <field name="arch" type="xml">
                 <xpath expr="//field[@name='qty_done']" position="after">
                     <field name="modality_id"/>
+                    <field name="destiny_id"/>
                     <field name="price"/>
                     <field name="total_price"/>
                 </xpath>

@@ -12,21 +12,21 @@ class StockPickingModality(models.Model):
         readonly=False,
         store=True,
     )
+    line_qty = fields.Integer(
+        string='Line Qty',
+        readonly=False,
+        store=True,
+    )
     stock_move_ids = fields.One2many(
         comodel_name='stock.move',
         inverse_name='modality_id',
         string='Stock Moves'
     )
-    line_qty = fields.Integer(
-        string='Cantidad de lineas',
-        readonly=False,
-        store=True,
-    )
-    rate_id = fields.Many2many(
-        comodel_name='rate.picking.destiny',
-        inverse_name='modality_id',
-        string='Destiny',
-    )
+    # rate_id = fields.Many2many(
+    #     comodel_name='rate.picking.destiny',
+    #     inverse_name='modality_id',
+    #     string='Destiny',
+    # )
 
     def action_open_stock_move_filtered(self):
         return {

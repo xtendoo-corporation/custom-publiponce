@@ -1,0 +1,41 @@
+<odoo>
+    <data>
+        <record id="action_stock_picking_modality_destiny_price" model="ir.actions.act_window">
+            <field name="name">Tarifas de entregas</field>
+            <field name="res_model">stock.picking.modality.destiny.price</field>
+            <field name="view_mode">tree,form</field>
+        </record>
+
+        <record id="view_stock_picking_modality_price_tree" model="ir.ui.view">
+            <field name="name">stock.picking.modality.price.tree</field>
+            <field name="model">stock.picking.modality.destiny.price</field>
+            <field name="arch" type="xml">
+                <tree>
+                    <field name="modality_id"/>
+                    <field name="destiny_id"/>
+                    <field name="price"/>
+                </tree>
+            </field>
+        </record>
+
+        <record id="view_stock_picking_modality_price_form" model="ir.ui.view">
+            <field name="name">stock.picking.modality.price.form</field>
+            <field name="model">stock.picking.modality.destiny.price</field>
+            <field name="arch" type="xml">
+                <form editable="top">
+                    <group>
+                        <field name="modality_id"/>
+                        <field name="destiny_id"/>
+                        <field name="price"/>
+                    </group>
+                </form>
+            </field>
+        </record>
+
+        <menuitem id="action_stock_picking_modality_destiny_price_menu"
+                  name="Tarifas de entregas"
+                  parent="stock.menu_stock_warehouse_mgmt"
+                  sequence="50"
+                  action="action_stock_picking_modality_destiny_price"/>
+    </data>
+</odoo>

@@ -1,7 +1,7 @@
 <odoo>
     <data>
         <record id="action_stock_picking_modality" model="ir.actions.act_window">
-            <field name="name">Stock picking modality</field>
+            <field name="name">Modalidades de entrega</field>
             <field name="res_model">stock.picking.modality</field>
             <field name="view_mode">tree,form</field>
         </record>
@@ -37,7 +37,7 @@
         </record>
 
         <menuitem id="stock_picking_modality_menu"
-                  name="Stock picking modality"
+                  name="Modalidades de entrega"
                   parent="stock.menu_stock_warehouse_mgmt"
                   sequence="40"
                   action="action_stock_picking_modality"/>

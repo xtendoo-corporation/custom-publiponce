@@ -10,6 +10,9 @@ class StockMoveLine(models.Model):
     modality_id = fields.Many2one(
         related='move_id.modality_id',
     )
+    destiny_id = fields.Many2one(
+        related='move_id.destiny_id',
+    )
     price = fields.Float(
         related='move_id.price',
     )
