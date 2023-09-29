@@ -11,7 +11,7 @@ class StockMoveLine(models.Model):
         related='move_id.modality_id',
     )
     price = fields.Float(
-        related='modality_id.price',
+        related='move_id.price',
     )
     total_price = fields.Float(
         related='move_id.total_price',
