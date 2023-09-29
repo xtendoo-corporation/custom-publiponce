@@ -27,6 +27,7 @@ class RatePickingModalityPrice(models.Model):
         string='Rate Name',
         compute='get_rate_name',
         store=True,
+        readonly=False,
     )
 
     _sql_constraints = [
