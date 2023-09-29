@@ -11,7 +11,7 @@
             <field name="model">rate.picking.modality.price</field>
             <field name="arch" type="xml">
                 <tree>
-                    <field name="rate_id"/>
+                    <field name="rate_name"/>
                     <field name="modality_id"/>
                     <field name="price"/>
                 </tree>
@@ -24,7 +24,7 @@
             <field name="arch" type="xml">
                 <form editable="top">
                     <group>
-                        <field name="rate_id"/>
+                        <field name="rate_name"/>
                         <field name="modality_id"/>
                         <field name="price"/>
                     </group>

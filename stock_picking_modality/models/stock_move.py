@@ -23,7 +23,6 @@ class StockMove(models.Model):
     total_price = fields.Float(
         string='Precio total',
         compute='_compute_total_price',
-        store=True,
     )
     lot_id = fields.Many2one(
         related='move_line_ids.lot_id',

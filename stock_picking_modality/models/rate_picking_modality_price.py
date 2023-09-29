@@ -23,7 +23,18 @@ class RatePickingModalityPrice(models.Model):
         string='Price',
         readonly=False,
     )
+    rate_name = fields.Char(
+        string='Rate Name',
+        compute='get_rate_name',
+        store=True,
+    )
 
     _sql_constraints = [
-        ('unique_rate_modality', 'unique(rate_id, modality_id)', 'Un destino solo puede tener un precio para una modalidad.')
+        ('unique_rate_modality', 'unique(rate_name, modality_id)',
+         'Un destino solo puede tener un precio para una modalidad.')
     ]
+
+    @api.depends('rate_id')
+    def get_rate_name(self):
+        for record in self:
+            record.rate_name = record.rate_id.name
