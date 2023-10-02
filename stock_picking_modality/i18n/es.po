@@ -6,8 +6,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 16.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2023-09-29 09:23+0000\n"
-"PO-Revision-Date: 2023-09-29 09:23+0000\n"
+"POT-Creation-Date: 2023-10-02 07:09+0000\n"
+"PO-Revision-Date: 2023-10-02 07:09+0000\n"
 "Last-Translator: \n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
@@ -16,93 +16,91 @@ msgstr ""
 "Plural-Forms: \n"
 
 #. module: stock_picking_modality
-#: model_terms:ir.ui.view,arch_db:stock_picking_modality.view_stock_picking_line_custom
-msgid "Are you sure you want to validate?"
-msgstr "¿Estás seguro de que quieres validar?"
-
-#. module: stock_picking_modality
-#: model:ir.model.fields,field_description:stock_picking_modality.field_stock_picking_modality__line_qty
-msgid "Cantidad de lineas"
-msgstr "Cantidad de líneas"
-
-#. module: stock_picking_modality
-#: model:ir.model.fields,field_description:stock_picking_modality.field_rate_picking_destiny__create_uid
-#: model:ir.model.fields,field_description:stock_picking_modality.field_rate_picking_modality_price__create_uid
+#: model:ir.model.fields,field_description:stock_picking_modality.field_stock_picking_destiny__create_uid
 #: model:ir.model.fields,field_description:stock_picking_modality.field_stock_picking_modality__create_uid
+#: model:ir.model.fields,field_description:stock_picking_modality.field_stock_picking_modality_destiny_price__create_uid
 msgid "Created by"
 msgstr "Creado por"
 
 #. module: stock_picking_modality
-#: model:ir.model.fields,field_description:stock_picking_modality.field_rate_picking_destiny__create_date
-#: model:ir.model.fields,field_description:stock_picking_modality.field_rate_picking_modality_price__create_date
+#: model:ir.model.fields,field_description:stock_picking_modality.field_stock_picking_destiny__create_date
 #: model:ir.model.fields,field_description:stock_picking_modality.field_stock_picking_modality__create_date
+#: model:ir.model.fields,field_description:stock_picking_modality.field_stock_picking_modality_destiny_price__create_date
 msgid "Created on"
 msgstr "Creado en"
 
 #. module: stock_picking_modality
-#: model:ir.model.fields,field_description:stock_picking_modality.field_stock_move__rate_id
-#: model:ir.model.fields,field_description:stock_picking_modality.field_stock_picking_modality__rate_id
+#: model:ir.actions.act_window,name:stock_picking_modality.action_stock_picking_destiny
+#: model:ir.ui.menu,name:stock_picking_modality.stock_picking_destiny_menu
+msgid "Destino de entregas"
+msgstr ""
+
+#. module: stock_picking_modality
+#: model:ir.model.fields,field_description:stock_picking_modality.field_stock_move__destiny_id
+#: model:ir.model.fields,field_description:stock_picking_modality.field_stock_move_line__destiny_id
+#: model:ir.model.fields,field_description:stock_picking_modality.field_stock_picking__destiny_id
+#: model:ir.model.fields,field_description:stock_picking_modality.field_stock_picking_modality_destiny_price__destiny_id
 msgid "Destiny"
 msgstr "Destino"
 
 #. module: stock_picking_modality
-#: model:ir.model.fields,field_description:stock_picking_modality.field_rate_picking_destiny__display_name
-#: model:ir.model.fields,field_description:stock_picking_modality.field_rate_picking_modality_price__display_name
+#: model:ir.model.fields,field_description:stock_picking_modality.field_stock_picking_destiny__display_name
 #: model:ir.model.fields,field_description:stock_picking_modality.field_stock_picking_modality__display_name
+#: model:ir.model.fields,field_description:stock_picking_modality.field_stock_picking_modality_destiny_price__display_name
 msgid "Display Name"
 msgstr "Nombre a mostrar"
 
 #. module: stock_picking_modality
-#: model:ir.model.fields,field_description:stock_picking_modality.field_rate_picking_destiny__id
-#: model:ir.model.fields,field_description:stock_picking_modality.field_rate_picking_modality_price__id
+#: model:ir.model.fields,field_description:stock_picking_modality.field_stock_picking_destiny__id
 #: model:ir.model.fields,field_description:stock_picking_modality.field_stock_picking_modality__id
+#: model:ir.model.fields,field_description:stock_picking_modality.field_stock_picking_modality_destiny_price__id
 msgid "ID"
 msgstr ""
 
 #. module: stock_picking_modality
-#: model:ir.model.fields,field_description:stock_picking_modality.field_rate_picking_destiny____last_update
-#: model:ir.model.fields,field_description:stock_picking_modality.field_rate_picking_modality_price____last_update
+#: model:ir.model.fields,field_description:stock_picking_modality.field_stock_picking_destiny____last_update
 #: model:ir.model.fields,field_description:stock_picking_modality.field_stock_picking_modality____last_update
+#: model:ir.model.fields,field_description:stock_picking_modality.field_stock_picking_modality_destiny_price____last_update
 msgid "Last Modified on"
-msgstr "Última modificación"
+msgstr "última modificación"
 
 #. module: stock_picking_modality
-#: model:ir.model.fields,field_description:stock_picking_modality.field_rate_picking_destiny__write_uid
-#: model:ir.model.fields,field_description:stock_picking_modality.field_rate_picking_modality_price__write_uid
+#: model:ir.model.fields,field_description:stock_picking_modality.field_stock_picking_destiny__write_uid
 #: model:ir.model.fields,field_description:stock_picking_modality.field_stock_picking_modality__write_uid
+#: model:ir.model.fields,field_description:stock_picking_modality.field_stock_picking_modality_destiny_price__write_uid
 msgid "Last Updated by"
 msgstr "Última actualización por"
 
 #. module: stock_picking_modality
-#: model:ir.model.fields,field_description:stock_picking_modality.field_rate_picking_destiny__write_date
-#: model:ir.model.fields,field_description:stock_picking_modality.field_rate_picking_modality_price__write_date
+#: model:ir.model.fields,field_description:stock_picking_modality.field_stock_picking_destiny__write_date
 #: model:ir.model.fields,field_description:stock_picking_modality.field_stock_picking_modality__write_date
+#: model:ir.model.fields,field_description:stock_picking_modality.field_stock_picking_modality_destiny_price__write_date
 msgid "Last Updated on"
 msgstr "Última actualización"
 
 #. module: stock_picking_modality
-#: model:ir.model.fields,field_description:stock_picking_modality.field_stock_move__lot_id
-msgid "Lot/Serial Number"
-msgstr "Lote/Nº de serie"
+#: model:ir.model.fields,field_description:stock_picking_modality.field_stock_picking_modality__line_qty
+msgid "Line Qty"
+msgstr "Cantidad de líneas"
 
 #. module: stock_picking_modality
-#: model:ir.model.fields,field_description:stock_picking_modality.field_rate_picking_destiny__modality_price_ids
-#: model:ir.model.fields,field_description:stock_picking_modality.field_stock_move__modality_price_ids
-#: model:ir.model.fields,field_description:stock_picking_modality.field_stock_picking__modality_price_ids
-msgid "Modalities and Prices"
-msgstr "Modalidades y precios"
+#: model:ir.actions.act_window,name:stock_picking_modality.action_stock_picking_modality
+#: model:ir.ui.menu,name:stock_picking_modality.stock_picking_modality_menu
+msgid "Modalidades de entrega"
+msgstr "Selección de modalidad de entrega"
 
 #. module: stock_picking_modality
-#: model:ir.model.fields,field_description:stock_picking_modality.field_rate_picking_modality_price__modality_id
 #: model:ir.model.fields,field_description:stock_picking_modality.field_stock_move__modality_id
 #: model:ir.model.fields,field_description:stock_picking_modality.field_stock_move_line__modality_id
 #: model:ir.model.fields,field_description:stock_picking_modality.field_stock_picking__modality_id
+#: model:ir.model.fields,field_description:stock_picking_modality.field_stock_picking_modality_destiny_price__modality_id
 msgid "Modality"
 msgstr "Modalidad"
 
 #. module: stock_picking_modality
-#: model:ir.model.fields,field_description:stock_picking_modality.field_rate_picking_destiny__name
+#: model:ir.model.fields,field_description:stock_picking_modality.field_stock_picking_destiny__name
 #: model:ir.model.fields,field_description:stock_picking_modality.field_stock_picking_modality__name
+#: model:ir.model.fields,field_description:stock_picking_modality.field_stock_picking_modality_destiny_price__name
 msgid "Name"
 msgstr "Nombre"
 
@@ -119,7 +117,7 @@ msgid "Precio total"
 msgstr ""
 
 #. module: stock_picking_modality
-#: model:ir.model.fields,field_description:stock_picking_modality.field_rate_picking_modality_price__price
+#: model:ir.model.fields,field_description:stock_picking_modality.field_stock_picking_modality_destiny_price__price
 msgid "Price"
 msgstr "Precio"
 
@@ -127,29 +125,6 @@ msgstr "Precio"
 #: model:ir.model,name:stock_picking_modality.model_stock_move_line
 msgid "Product Moves (Stock Move Line)"
 msgstr "Movimientos de Producto (Stock Move Line)"
-
-#. module: stock_picking_modality
-#: model:ir.model.fields,field_description:stock_picking_modality.field_rate_picking_modality_price__rate_id
-#: model:ir.model.fields,field_description:stock_picking_modality.field_stock_picking__rate_id
-msgid "Rate"
-msgstr "Tarifa"
-
-#. module: stock_picking_modality
-#: model:ir.model.fields,field_description:stock_picking_modality.field_rate_picking_modality_price__rate_name
-msgid "Rate Name"
-msgstr "Destino"
-
-#. module: stock_picking_modality
-#: model:ir.actions.act_window,name:stock_picking_modality.action_rate_picking_destiny
-#: model:ir.ui.menu,name:stock_picking_modality.rate_picking_destiny_menu
-msgid "Rate picking destiny"
-msgstr "Destinos de entrega"
-
-#. module: stock_picking_modality
-#: model:ir.actions.act_window,name:stock_picking_modality.action_rate_picking_modality_price
-#: model:ir.ui.menu,name:stock_picking_modality.rate_picking_modality_price_menu
-msgid "Rates"
-msgstr "Tarifas de entrega"
 
 #. module: stock_picking_modality
 #: model:ir.model,name:stock_picking_modality.model_stock_move
@@ -160,13 +135,13 @@ msgstr "Movimiento de existencias"
 #: model:ir.model.fields,field_description:stock_picking_modality.field_stock_picking_modality__stock_move_ids
 #: model_terms:ir.ui.view,arch_db:stock_picking_modality.view_stock_picking_modality_form
 msgid "Stock Moves"
-msgstr "Movimientos de existencias"
+msgstr "movimientos de existencias"
 
 #. module: stock_picking_modality
-#: model:ir.actions.act_window,name:stock_picking_modality.action_stock_picking_modality
-#: model:ir.ui.menu,name:stock_picking_modality.stock_picking_modality_menu
-msgid "Stock picking modality"
-msgstr "Modalidad de entrega"
+#: model:ir.actions.act_window,name:stock_picking_modality.action_stock_picking_modality_destiny_price
+#: model:ir.ui.menu,name:stock_picking_modality.action_stock_picking_modality_destiny_price_menu
+msgid "Tarifas de entregas"
+msgstr ""
 
 #. module: stock_picking_modality
 #: model:ir.model,name:stock_picking_modality.model_stock_picking
@@ -174,26 +149,21 @@ msgid "Transfer"
 msgstr "Albarán"
 
 #. module: stock_picking_modality
-#: model:ir.model.constraint,message:stock_picking_modality.constraint_rate_picking_modality_price_unique_rate_modality
+#: model:ir.model.constraint,message:stock_picking_modality.constraint_stock_picking_modality_destiny_price_unique_destiny_id_modality
 msgid "Un destino solo puede tener un precio para una modalidad."
 msgstr ""
 
 #. module: stock_picking_modality
-#: model_terms:ir.ui.view,arch_db:stock_picking_modality.view_stock_picking_line_custom
-msgid "Validate"
-msgstr "Validar"
-
-#. module: stock_picking_modality
-#: model:ir.model,name:stock_picking_modality.model_rate_picking_destiny
-msgid "rate.picking.destiny"
-msgstr ""
-
-#. module: stock_picking_modality
-#: model:ir.model,name:stock_picking_modality.model_rate_picking_modality_price
-msgid "rate.picking.modality.price"
+#: model:ir.model,name:stock_picking_modality.model_stock_picking_destiny
+msgid "stock.picking.destiny"
 msgstr ""
 
 #. module: stock_picking_modality
 #: model:ir.model,name:stock_picking_modality.model_stock_picking_modality
 msgid "stock.picking.modality"
+msgstr ""
+
+#. module: stock_picking_modality
+#: model:ir.model,name:stock_picking_modality.model_stock_picking_modality_destiny_price
+msgid "stock.picking.modality.destiny.price"
 msgstr ""
