@@ -34,7 +34,7 @@
 
         <menuitem id="action_stock_picking_modality_destiny_price_menu"
                   name="Tarifas de entregas"
-                  parent="stock.menu_stock_warehouse_mgmt"
+                  parent="stock.menu_stock_config_settings"
                   sequence="50"
                   action="action_stock_picking_modality_destiny_price"/>
     </data>

@@ -38,7 +38,7 @@
 
         <menuitem id="stock_picking_modality_menu"
                   name="Modalidades de entrega"
-                  parent="stock.menu_stock_warehouse_mgmt"
+                  parent="stock.menu_stock_config_settings"
                   sequence="40"
                   action="action_stock_picking_modality"/>
     </data>

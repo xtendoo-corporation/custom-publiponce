@@ -36,7 +36,7 @@
 
         <menuitem id="stock_picking_destiny_menu"
                   name="Destino de entregas"
-                  parent="stock.menu_stock_warehouse_mgmt"
+                  parent="stock.menu_stock_config_settings"
                   sequence="50"
                   action="action_stock_picking_destiny"/>
     </data>
