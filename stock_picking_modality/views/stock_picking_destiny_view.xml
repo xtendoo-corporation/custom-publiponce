@@ -23,12 +23,6 @@
                 <form editable="top">
                     <group colspan="4">
                         <field name="name"/>
-<!--                        <field name="modality_price_ids" widget="one2many_tags">-->
-<!--                            <tree>-->
-<!--                                <field name="modality_id"/>-->
-<!--                                <field name="price"/>-->
-<!--                            </tree>-->
-<!--                        </field>-->
                     </group>
                 </form>
             </field>
