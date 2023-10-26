@@ -20,4 +20,5 @@ class StockPicking(models.Model):
         max_line_qty = max(line.modality_id.line_qty for line in self.move_ids)
         if max_line_qty > len(self.move_ids):
             raise exceptions.UserError("No puede validar debido a la incoherencia de las líneas con su modalidad.")
-        super().button_validate()
+        else:
+            return super().action_validate()
