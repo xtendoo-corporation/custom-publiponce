@@ -15,16 +15,9 @@ class StockPicking(models.Model):
         comodel_name='stock.picking.destiny',
         string='Destiny',
     )
-    # modality_price_ids = fields.One2many(
-    #     comodel_name='rate.picking.modality.price',
-    #     related='rate_id.modality_price_ids',
-    #     string='Modalities and Prices',
-    # )
 
     def action_validate(self):
         max_line_qty = max(line.modality_id.line_qty for line in self.move_ids)
         if max_line_qty > len(self.move_ids):
             raise exceptions.UserError("No puede validar debido a la incoherencia de las líneas con su modalidad.")
-        else:
-            super().action_validate()
-
+        super().button_validate()

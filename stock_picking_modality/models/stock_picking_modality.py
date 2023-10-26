@@ -22,11 +22,6 @@ class StockPickingModality(models.Model):
         inverse_name='modality_id',
         string='Stock Moves'
     )
-    # rate_id = fields.Many2many(
-    #     comodel_name='rate.picking.destiny',
-    #     inverse_name='modality_id',
-    #     string='Destiny',
-    # )
 
     def action_open_stock_move_filtered(self):
         return {
@@ -35,6 +30,6 @@ class StockPickingModality(models.Model):
             'res_model': 'stock.move',
             'view_mode': 'tree',
             'view_id': self.env.ref('stock.view_move_tree').id,
-            'domain': [('modality_id', '=', self.id)],
+            'domain': [('modality_id', '=', self.id), ('state', '!=', 'done')],
             'target': 'current',
         }

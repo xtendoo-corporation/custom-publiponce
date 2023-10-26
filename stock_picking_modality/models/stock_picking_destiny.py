@@ -12,9 +12,3 @@ class StockPickingDestiny(models.Model):
         readonly=False,
         store=True,
     )
-    # modality_price_ids = fields.One2many(
-    #     comodel_name='rate.picking.modality.price',
-    #     inverse_name='rate_id',
-    #     string='Modalities and Prices',
-    #     readonly=False,
-    # )

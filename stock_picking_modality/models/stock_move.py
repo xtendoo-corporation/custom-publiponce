@@ -15,11 +15,6 @@ class StockMove(models.Model):
         comodel_name='stock.picking.destiny',
         string='Destiny',
     )
-    # modality_price_ids = fields.One2many(
-    #     comodel_name='rate.picking.modality.price',
-    #     related='rate_id.modality_price_ids',
-    #     string='Modalities and Prices',
-    # )
     price = fields.Float(
         string='Precio',
         compute='_on_change_price',
@@ -28,9 +23,6 @@ class StockMove(models.Model):
         string='Precio total',
         compute='_compute_total_price',
     )
-    # lot_ids = fields.Many2one(
-    #     related='move_line_ids.lot_ids',
-    # )
 
     @api.onchange('modality_id', 'destiny_id')
     def _on_change_price(self):
