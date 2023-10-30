@@ -12,6 +12,7 @@
             <field name="arch" type="xml">
                 <tree>
                     <field name="name"/>
+                    <field name="line_qty"/>
                 </tree>
             </field>
         </record>
@@ -23,8 +24,7 @@
                 <form editable="top">
                     <header>
                         <button name="action_open_stock_move_filtered" type="object"
-                                class="oe_stat_button" icon="fa-table"
-                                align="left">
+                                class="oe_stat_button" icon="fa-table" align="left">
                             Stock Moves
                         </button>
                     </header>

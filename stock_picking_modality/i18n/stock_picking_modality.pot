@@ -6,8 +6,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 16.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2023-10-30 00:12+0000\n"
-"PO-Revision-Date: 2023-10-30 00:12+0000\n"
+"POT-Creation-Date: 2023-10-30 00:11+0000\n"
+"PO-Revision-Date: 2023-10-30 00:11+0000\n"
 "Last-Translator: \n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
@@ -18,21 +18,21 @@ msgstr ""
 #. module: stock_picking_modality
 #: model_terms:ir.ui.view,arch_db:stock_picking_modality.view_stock_picking_line_custom
 msgid "Are you sure you want to validate?"
-msgstr "¿Estás seguro de que quieres validar?"
+msgstr ""
 
 #. module: stock_picking_modality
 #: model:ir.model.fields,field_description:stock_picking_modality.field_stock_picking_destiny__create_uid
 #: model:ir.model.fields,field_description:stock_picking_modality.field_stock_picking_modality__create_uid
 #: model:ir.model.fields,field_description:stock_picking_modality.field_stock_picking_modality_destiny_price__create_uid
 msgid "Created by"
-msgstr "Creado por"
+msgstr ""
 
 #. module: stock_picking_modality
 #: model:ir.model.fields,field_description:stock_picking_modality.field_stock_picking_destiny__create_date
 #: model:ir.model.fields,field_description:stock_picking_modality.field_stock_picking_modality__create_date
 #: model:ir.model.fields,field_description:stock_picking_modality.field_stock_picking_modality_destiny_price__create_date
 msgid "Created on"
-msgstr "Creado en"
+msgstr ""
 
 #. module: stock_picking_modality
 #: model:ir.actions.act_window,name:stock_picking_modality.action_stock_picking_destiny
@@ -46,14 +46,14 @@ msgstr ""
 #: model:ir.model.fields,field_description:stock_picking_modality.field_stock_picking__destiny_id
 #: model:ir.model.fields,field_description:stock_picking_modality.field_stock_picking_modality_destiny_price__destiny_id
 msgid "Destiny"
-msgstr "Destino"
+msgstr ""
 
 #. module: stock_picking_modality
 #: model:ir.model.fields,field_description:stock_picking_modality.field_stock_picking_destiny__display_name
 #: model:ir.model.fields,field_description:stock_picking_modality.field_stock_picking_modality__display_name
 #: model:ir.model.fields,field_description:stock_picking_modality.field_stock_picking_modality_destiny_price__display_name
 msgid "Display Name"
-msgstr "Nombre a mostrar"
+msgstr ""
 
 #. module: stock_picking_modality
 #: model_terms:ir.ui.view,arch_db:stock_picking_modality.view_move_form_inherit
@@ -72,32 +72,32 @@ msgstr ""
 #: model:ir.model.fields,field_description:stock_picking_modality.field_stock_picking_modality____last_update
 #: model:ir.model.fields,field_description:stock_picking_modality.field_stock_picking_modality_destiny_price____last_update
 msgid "Last Modified on"
-msgstr "última modificación"
+msgstr ""
 
 #. module: stock_picking_modality
 #: model:ir.model.fields,field_description:stock_picking_modality.field_stock_picking_destiny__write_uid
 #: model:ir.model.fields,field_description:stock_picking_modality.field_stock_picking_modality__write_uid
 #: model:ir.model.fields,field_description:stock_picking_modality.field_stock_picking_modality_destiny_price__write_uid
 msgid "Last Updated by"
-msgstr "Última actualización por"
+msgstr ""
 
 #. module: stock_picking_modality
 #: model:ir.model.fields,field_description:stock_picking_modality.field_stock_picking_destiny__write_date
 #: model:ir.model.fields,field_description:stock_picking_modality.field_stock_picking_modality__write_date
 #: model:ir.model.fields,field_description:stock_picking_modality.field_stock_picking_modality_destiny_price__write_date
 msgid "Last Updated on"
-msgstr "Última actualización"
+msgstr ""
 
 #. module: stock_picking_modality
 #: model:ir.model.fields,field_description:stock_picking_modality.field_stock_picking_modality__line_qty
 msgid "Line Qty"
-msgstr "Cantidad de líneas"
+msgstr ""
 
 #. module: stock_picking_modality
 #: model:ir.actions.act_window,name:stock_picking_modality.action_stock_picking_modality
 #: model:ir.ui.menu,name:stock_picking_modality.stock_picking_modality_menu
 msgid "Modalidades de entrega"
-msgstr "Selección de modalidad de entrega"
+msgstr ""
 
 #. module: stock_picking_modality
 #: model:ir.model.fields,field_description:stock_picking_modality.field_stock_move__modality_id
@@ -105,14 +105,14 @@ msgstr "Selección de modalidad de entrega"
 #: model:ir.model.fields,field_description:stock_picking_modality.field_stock_picking__modality_id
 #: model:ir.model.fields,field_description:stock_picking_modality.field_stock_picking_modality_destiny_price__modality_id
 msgid "Modality"
-msgstr "Modalidad"
+msgstr ""
 
 #. module: stock_picking_modality
 #: model:ir.model.fields,field_description:stock_picking_modality.field_stock_picking_destiny__name
 #: model:ir.model.fields,field_description:stock_picking_modality.field_stock_picking_modality__name
 #: model:ir.model.fields,field_description:stock_picking_modality.field_stock_picking_modality_destiny_price__name
 msgid "Name"
-msgstr "Nombre"
+msgstr ""
 
 #. module: stock_picking_modality
 #: model:ir.model.fields,field_description:stock_picking_modality.field_stock_move__price
@@ -129,23 +129,23 @@ msgstr ""
 #. module: stock_picking_modality
 #: model:ir.model.fields,field_description:stock_picking_modality.field_stock_picking_modality_destiny_price__price
 msgid "Price"
-msgstr "Precio"
+msgstr ""
 
 #. module: stock_picking_modality
 #: model:ir.model,name:stock_picking_modality.model_stock_move_line
 msgid "Product Moves (Stock Move Line)"
-msgstr "Movimientos de Producto (Stock Move Line)"
+msgstr ""
 
 #. module: stock_picking_modality
 #: model:ir.model,name:stock_picking_modality.model_stock_move
 msgid "Stock Move"
-msgstr "Movimiento de existencias"
+msgstr ""
 
 #. module: stock_picking_modality
 #: model:ir.model.fields,field_description:stock_picking_modality.field_stock_picking_modality__stock_move_ids
 #: model_terms:ir.ui.view,arch_db:stock_picking_modality.view_stock_picking_modality_form
 msgid "Stock Moves"
-msgstr "movimientos de existencias"
+msgstr ""
 
 #. module: stock_picking_modality
 #: model:ir.actions.act_window,name:stock_picking_modality.action_stock_picking_modality_destiny_price
@@ -156,7 +156,7 @@ msgstr ""
 #. module: stock_picking_modality
 #: model:ir.model,name:stock_picking_modality.model_stock_picking
 msgid "Transfer"
-msgstr "Albarán"
+msgstr ""
 
 #. module: stock_picking_modality
 #: model:ir.model.constraint,message:stock_picking_modality.constraint_stock_picking_modality_destiny_price_unique_destiny_id_modality
@@ -166,7 +166,7 @@ msgstr ""
 #. module: stock_picking_modality
 #: model_terms:ir.ui.view,arch_db:stock_picking_modality.view_stock_picking_line_custom
 msgid "Validate"
-msgstr "Validar"
+msgstr ""
 
 #. module: stock_picking_modality
 #: model:ir.model,name:stock_picking_modality.model_stock_picking_destiny
