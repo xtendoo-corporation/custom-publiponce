@@ -6,6 +6,7 @@ from odoo import api, fields, models
 
 class StockPickingModality(models.Model):
     _name = 'stock.picking.modality'
+    _description = 'Modalidad de entregas'
 
     name = fields.Char(
         string='Name',

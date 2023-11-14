@@ -6,6 +6,7 @@ from odoo import api, fields, models
 
 class StockPickingModalityDestinyPrice(models.Model):
     _name = 'stock.picking.modality.destiny.price'
+    _description = 'Precio de destino por modalidad'
 
     name = fields.Char(
         compute="_compute_name",
