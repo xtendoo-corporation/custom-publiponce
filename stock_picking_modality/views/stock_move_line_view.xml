@@ -8,6 +8,7 @@
                 <xpath expr="//field[@name='state']" position="before">
                     <field name="modality_id"/>
                     <field name="destiny_id"/>
+                    <field name="zone_id"/>
                     <field name="price"/>
                     <field name="total_price"/>
                 </xpath>

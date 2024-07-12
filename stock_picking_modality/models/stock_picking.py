@@ -15,10 +15,10 @@ class StockPicking(models.Model):
         comodel_name='stock.picking.destiny',
         string='Destiny',
     )
-    # zone_id = fields.Many2one(
-    #     comodel_name='stock.picking.destiny.zone',
-    #     string='Zone',
-    # )
+    zone_id = fields.Many2one(
+        comodel_name='stock.picking.zone',
+        string='Zone',
+    )
 
     def action_validate(self):
         max_line_qty = max(line.modality_id.line_qty for line in self.move_ids)

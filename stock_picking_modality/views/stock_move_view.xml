@@ -9,6 +9,7 @@
                 <group name="delivery_group" string="Entregas">
                     <field name="modality_id"/>
                     <field name="destiny_id"/>
+                    <field name="zone_id"/>
                     <field name="price"/>
                 </group>
             </group>
@@ -24,6 +25,7 @@
                 <xpath expr="//field[@name='product_uom_qty']" position="before">
                     <field name="modality_id"/>
                     <field name="destiny_id"/>
+                    <field name="zone_id"/>
                     <field name="price"/>
                 </xpath>
                 <xpath expr="//field[@name='product_uom_qty']" position="after">

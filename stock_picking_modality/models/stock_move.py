@@ -15,10 +15,10 @@ class StockMove(models.Model):
         comodel_name='stock.picking.destiny',
         string='Destiny',
     )
-    # zone_id = fields.Many2one(
-    #     comodel_name='stock.picking.destiny.zone',
-    #     string='Zone',
-    # )
+    zone_id = fields.Many2one(
+        comodel_name='stock.picking.zone',
+        string='Zone',
+    )
     price = fields.Float(
         string='Precio',
         compute='_on_change_price',
@@ -28,12 +28,12 @@ class StockMove(models.Model):
         compute='_compute_total_price',
     )
 
-    @api.onchange('modality_id', 'destiny_id')
+    @api.onchange('modality_id', 'destiny_id', 'zone_id')
     def _on_change_price(self):
         self.price = 0
         for move in self:
             modality_price = self.env['stock.picking.modality.destiny.price'].search(
-                [("modality_id", '=', move.modality_id.id), ("destiny_id", '=', move.destiny_id.id)], limit=1
+                [("modality_id", '=', move.modality_id.id), ("destiny_id", '=', move.destiny_id.id), ("zone_id", '=', move.zone_id.id)], limit=1
             )
             if modality_price:
                 move.price = modality_price.price

@@ -13,6 +13,7 @@
                 <tree>
                     <field name="modality_id"/>
                     <field name="destiny_id"/>
+                    <field name="zone_id"/>
                     <field name="price"/>
                 </tree>
             </field>
@@ -26,6 +27,7 @@
                     <group>
                         <field name="modality_id"/>
                         <field name="destiny_id"/>
+                        <field name="zone_id"/>
                         <field name="price"/>
                     </group>
                 </form>
