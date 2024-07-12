@@ -13,3 +13,9 @@ class StockPickingDestiny(models.Model):
         readonly=False,
         store=True,
     )
+
+    zone = fields.Char(
+        string='Zone',
+        readonly=False,
+        store=True,
+    )

@@ -39,4 +39,4 @@ class StockPickingModalityDestinyPrice(models.Model):
     @api.depends("destiny_id", "modality_id")
     def _compute_name(self):
         for record in self:
-            record.name = record.destiny_id.name + ", " + record.modality_id.name
+            record.name = record.destiny_id.name + ", " + record.destiny_id.zone + ", " + record.modality_id.name
