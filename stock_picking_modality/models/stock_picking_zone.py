@@ -13,3 +13,9 @@ class StockPickingZone(models.Model):
         readonly=False,
         store=True,
     )
+
+    destiny_id = fields.Many2one(
+        comodel_name='stock.picking.destiny',
+        string='Destiny',
+    )
+

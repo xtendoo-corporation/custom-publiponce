@@ -33,7 +33,8 @@ class StockMove(models.Model):
         self.price = 0
         for move in self:
             modality_price = self.env['stock.picking.modality.destiny.price'].search(
-                [("modality_id", '=', move.modality_id.id), ("destiny_id", '=', move.destiny_id.id), ("zone_id", '=', move.zone_id.id)], limit=1
+                [("modality_id", '=', move.modality_id.id), ("destiny_id", '=', move.destiny_id.id),
+                 ("zone_id", '=', move.zone_id.id)], limit=1
             )
             if modality_price:
                 move.price = modality_price.price
@@ -42,3 +43,44 @@ class StockMove(models.Model):
     def _compute_total_price(self):
         for move in self:
             move.total_price = move.product_uom_qty * move.price
+
+    @api.onchange('modality_id')
+    def _onchange_modality_id(self):
+        if self.modality_id:
+            destiny_ids = self.env['stock.picking.modality.destiny.price'].search(
+                [('modality_id', '=', self.modality_id.id)]).mapped('destiny_id.id')
+            if self.destiny_id.id not in destiny_ids:
+                self.destiny_id = False
+            return {
+                'domain': {
+                    'destiny_id': [('id', 'in', destiny_ids)]
+                }
+            }
+        else:
+            self.destiny_id = False
+            return {
+                'domain': {
+                    'destiny_id': []
+                }
+            }
+
+    @api.onchange('destiny_id')
+    def _onchange_destiny_id(self):
+        if self.destiny_id and self.modality_id:
+            zone_ids = self.env['stock.picking.modality.destiny.price'].search(
+                [('modality_id', '=', self.modality_id.id), ('destiny_id', '=', self.destiny_id.id)]).mapped(
+                'zone_id.id')
+            if self.zone_id.id not in zone_ids:
+                self.zone_id = False
+            return {
+                'domain': {
+                    'zone_id': [('id', 'in', zone_ids)]
+                }
+            }
+        else:
+            self.zone_id = False
+            return {
+                'domain': {
+                    'zone_id': []
+                }
+            }

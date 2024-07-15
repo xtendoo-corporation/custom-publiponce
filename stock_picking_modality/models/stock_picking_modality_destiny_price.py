@@ -50,9 +50,11 @@ class StockPickingModalityDestinyPrice(models.Model):
     @api.onchange('destiny_id')
     def _onchange_destiny_id(self):
         if self.destiny_id:
+            zone_ids = self.env['stock.picking.destiny'].search(
+                [('name', '=', self.destiny_id.name)]).mapped('zone_id.id')
             return {
                 'domain': {
-                    'zone_id': [('id', '=', self.destiny_id.zone_id.id)]
+                    'zone_id': [('id', 'in', zone_ids)]
                 }
             }
         else:

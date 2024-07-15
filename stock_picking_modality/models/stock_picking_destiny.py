@@ -14,8 +14,9 @@ class StockPickingDestiny(models.Model):
         store=True,
     )
 
-    zone_id = fields.Many2one(
+    zone_id = fields.One2many(
         comodel_name='stock.picking.zone',
+        inverse_name='destiny_id',
         string='Zone',
         readonly=False,
         required=True,

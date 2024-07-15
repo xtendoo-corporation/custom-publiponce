@@ -26,3 +26,5 @@ class StockPicking(models.Model):
             raise exceptions.UserError("No puede validar debido a la incoherencia de las líneas con su modalidad.")
         else:
             return super().button_validate()
+
+
