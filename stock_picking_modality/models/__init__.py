@@ -5,3 +5,6 @@ from . import stock_picking_destiny
 from . import stock_picking_modality_destiny_price
 from . import stock_move_line
 from . import stock_picking_zone
+from . import res_partner
+from . import stock_move_planning
+from . import stock_move_planning_stage

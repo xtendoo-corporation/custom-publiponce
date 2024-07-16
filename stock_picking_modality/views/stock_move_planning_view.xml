@@ -1,0 +1,104 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<odoo>
+    <record id="view_stock_move_planning_tree" model="ir.ui.view">
+        <field name="name">Stock move planning</field>
+        <field name="model">stock.move.planning</field>
+        <field name="arch" type="xml">
+            <tree string="Stock Move Planning">
+                <!--                <field name="stock_move_id"/>-->
+                <field name="product_name"/>
+                <field name="modality_id"/>
+                <field name="destiny_id"/>
+                <field name="zone_id"/>
+                <field name="res_partner_id"/>
+                <field name="date_scheduled"/>
+                <field name="delivery_date"/>
+                <field name="is_delivered"/>
+                <field name="quantity"/>
+                <field name="price"/>
+                <field name="total_price"/>
+            </tree>
+        </field>
+    </record>
+
+    <record id="view_stock_move_planning_kanban" model="ir.ui.view">
+        <field name="name">stock.move.planning.kanban</field>
+        <field name="model">stock.move.planning</field>
+        <field name="arch" type="xml">
+            <kanban default_group_by="stage_id" class="o_kanban_small_column o_opportunity_kanban"
+                    on_create="quick_create" quick_create_view="stock_picking_modality.view_stock_move_planning_stage_form">
+                <field name="stage_id"/>
+                <field name="product_name"/>
+                <field name="modality_id"/>
+                <field name="destiny_id"/>
+                <field name="zone_id"/>
+                <field name="res_partner_id"/>
+                <field name="date_scheduled"/>
+                <field name="delivery_date"/>
+                <field name="is_delivered"/>
+                <field name="quantity"/>
+                <field name="price"/>
+                <field name="total_price"/>
+                <templates>
+                    <t t-name="kanban-box">
+                        <div class="oe_kanban_global_click">
+                            <div class="oe_kanban_details">
+                                <div class="o_kanban_record_title">
+                                    <strong>
+                                        <t t-esc="record.product_name.value"/>
+                                    </strong>
+                                </div>
+                                <div>
+                                    <t t-esc="record.modality_id.value"/>
+                                </div>
+                                <div>
+                                    <t t-esc="record.destiny_id.value"/>
+                                </div>
+                                <div>
+                                    <t t-esc="record.zone_id.value"/>
+                                </div>
+                                <div>
+                                    <t t-esc="record.res_partner_id.value"/>
+                                </div>
+                                <div>
+                                    <t t-esc="record.date_scheduled.value"/>
+                                </div>
+                                <div>
+                                    <div class="o-checkbox d-inline-block me-2">
+                                        <input id="is_delivered" type="checkbox" class="form-check-input"/>
+                                        <span>Is delivered?</span>
+                                    </div>
+                                </div>
+                                <div>
+                                    <t t-esc="record.quantity.value"/>
+                                </div>
+                                <div>
+                                    <t t-esc="record.total_price.value"/>
+                                </div>
+                            </div>
+                        </div>
+                    </t>
+                </templates>
+            </kanban>
+        </field>
+    </record>
+
+    <record id="action_stock_move_planning" model="ir.actions.act_window">
+        <field name="name">Planning</field>
+        <field name="res_model">stock.move.planning</field>
+        <field name="view_mode">tree,kanban</field>
+        <field name="help" type="html">
+            <p class="o_view_nocontent_smiling_face">
+                Create your first planning
+            </p>
+            <p>
+                Here you can create and manage your stock move planning.
+            </p>
+        </field>
+    </record>
+
+    <!-- Define the menu item -->
+    <menuitem id="menu_stock_move_planning" name="Planning" parent="stock.menu_stock_root"
+              action="action_stock_move_planning" sequence="100"/>
+
+</odoo>

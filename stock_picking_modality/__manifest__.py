@@ -10,6 +10,7 @@
     "depends":
         [
             "stock",
+            "contacts"
         ],
     "data":
         [
@@ -21,6 +22,9 @@
             "views/stock_picking_modality_view.xml",
             "views/stock_picking_modality_destiny_price_view.xml",
             "views/stock_picking_zone_view.xml",
+            "views/res_partner_view.xml",
+            "views/stock_move_planning_view.xml",
+            "views/stock_move_planning_stage_view.xml",
         ],
     'installable': True,
     'active': False,

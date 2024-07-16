@@ -4,9 +4,23 @@
 from odoo import api, fields, models
 
 
-class StockMove(models.Model):
-    _inherit = 'stock.move'
+class StockMovePlanning(models.Model):
+    _name = 'stock.move.planning'
+    _inherit = ['mail.thread', 'mail.activity.mixin']
 
+    stock_move_id = fields.Many2one(
+        comodel_name='stock.move',
+        string='Stock Move',
+        required=True,
+        readonly=False,
+    )
+    product_id = fields.Many2one(
+        comodel_name='stock.move',
+        string='Product id',
+    )
+    product_name = fields.Char(
+        string='Product',
+    )
     modality_id = fields.Many2one(
         comodel_name='stock.picking.modality',
         string='Modality',
@@ -19,13 +33,42 @@ class StockMove(models.Model):
         comodel_name='stock.picking.zone',
         string='Zone',
     )
+    res_partner_id = fields.Many2one(
+        comodel_name='res.partner',
+        string='Resource',
+        required=True,
+        readonly=False,
+        domain=[('is_resource', '=', True)],
+    )
+    is_delivered = fields.Boolean(
+        string='Delivered',
+        default=False,
+    )
+    delivery_date = fields.Date(
+        string='Delivery Date',
+        readonly=False,
+    )
+    date_scheduled = fields.Date(
+        string='Date Scheduled',
+        required=True,
+        readonly=False,
+    )
+    quantity = fields.Float(
+        string='Quantity',
+        required=True,
+        readonly=False,
+    )
     price = fields.Float(
-        string='Precio',
+        string='Price',
         compute='_on_change_price',
     )
     total_price = fields.Float(
-        string='Precio total',
+        string='Total price',
         compute='_compute_total_price',
+    )
+    stage_id = fields.Many2one(
+        comodel_name='stock.move.planning.stage',
+        string='Stage',
     )
 
     @api.onchange('modality_id', 'destiny_id', 'zone_id')
@@ -39,10 +82,10 @@ class StockMove(models.Model):
             if modality_price:
                 move.price = modality_price.price
 
-    @api.depends('product_uom_qty', 'price')
+    @api.depends('quantity', 'price')
     def _compute_total_price(self):
         for move in self:
-            move.total_price = move.product_uom_qty * move.price
+            move.total_price = move.quantity * move.price
 
     @api.onchange('modality_id')
     def _onchange_modality_id(self):
@@ -84,3 +127,4 @@ class StockMove(models.Model):
                     'zone_id': []
                 }
             }
+
