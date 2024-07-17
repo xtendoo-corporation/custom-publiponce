@@ -5,7 +5,6 @@
         <field name="model">stock.move.planning</field>
         <field name="arch" type="xml">
             <tree string="Stock Move Planning">
-                <!--                <field name="stock_move_id"/>-->
                 <field name="product_name"/>
                 <field name="modality_id"/>
                 <field name="destiny_id"/>
@@ -21,13 +20,35 @@
         </field>
     </record>
 
-    <record id="view_stock_move_planning_kanban" model="ir.ui.view">
-        <field name="name">stock.move.planning.kanban</field>
+    <record id="view_stock_move_planning_form" model="ir.ui.view">
+        <field name="name">Stock move planning form</field>
         <field name="model">stock.move.planning</field>
         <field name="arch" type="xml">
-            <kanban default_group_by="stage_id" class="o_kanban_small_column o_opportunity_kanban"
-                    on_create="quick_create" quick_create_view="stock_picking_modality.view_stock_move_planning_stage_form">
-                <field name="stage_id"/>
+            <form string="Stock Move Planning">
+                <sheet>
+                    <group>
+                        <field name="product_name"/>
+                        <field name="modality_id"/>
+                        <field name="destiny_id"/>
+                        <field name="zone_id"/>
+                        <field name="res_partner_id"/>
+                        <field name="date_scheduled"/>
+                        <field name="delivery_date"/>
+                        <field name="is_delivered"/>
+                        <field name="quantity"/>
+                        <field name="price"/>
+                        <field name="total_price"/>
+                    </group>
+                </sheet>
+            </form>
+        </field>
+    </record>
+
+    <record id="view_stock_move_planning_search" model="ir.ui.view">
+        <field name="name">stock.move.planning.search</field>
+        <field name="model">stock.move.planning</field>
+        <field name="arch" type="xml">
+            <search string="Stock Move Planning">
                 <field name="product_name"/>
                 <field name="modality_id"/>
                 <field name="destiny_id"/>
@@ -39,6 +60,29 @@
                 <field name="quantity"/>
                 <field name="price"/>
                 <field name="total_price"/>
+                <filter string="No entregado" name="no_entregado_filter" domain="[('is_delivered', '=', False)]"/>
+                <separator/>
+                <filter string="Resource" name="resource_filter" domain="[('res_partner_id', '!=', False)]"/>
+                <separator/>
+                <filter string="Delivered" name="entregado_filter" domain="[('is_delivered', '=', True)]" />
+            </search>
+        </field>
+    </record>
+
+    <record id="view_stock_move_planning_kanban" model="ir.ui.view">
+        <field name="name">stock.move.planning.kanban</field>
+        <field name="model">stock.move.planning</field>
+        <field name="arch" type="xml">
+            <kanban default_group_by="date_id" class="o_kanban_small_column o_opportunity_kanban">
+                <field name="product_name"/>
+                <field name="modality_id"/>
+                <field name="destiny_id"/>
+                <field name="zone_id"/>
+                <field name="res_partner_id"/>
+                <field name="date_scheduled"/>
+                <field name="delivery_date"/>
+                <field name="is_delivered"/>
+                <field name="date_id" widget="many2one" options="{'no_create': True}"/>
                 <templates>
                     <t t-name="kanban-box">
                         <div class="oe_kanban_global_click">
@@ -46,18 +90,23 @@
                                 <div class="o_kanban_record_title">
                                     <strong>
                                         <t t-esc="record.product_name.value"/>
+                                        <hr/>
                                     </strong>
                                 </div>
                                 <div>
+                                    <strong>Modality: </strong>
                                     <t t-esc="record.modality_id.value"/>
                                 </div>
                                 <div>
+                                    <strong>Destiny: </strong>
                                     <t t-esc="record.destiny_id.value"/>
                                 </div>
                                 <div>
+                                    <strong>Zone: </strong>
                                     <t t-esc="record.zone_id.value"/>
                                 </div>
                                 <div>
+                                    <strong>Recurse: </strong>
                                     <t t-esc="record.res_partner_id.value"/>
                                 </div>
                                 <div>
@@ -65,15 +114,14 @@
                                 </div>
                                 <div>
                                     <div class="o-checkbox d-inline-block me-2">
-                                        <input id="is_delivered" type="checkbox" class="form-check-input"/>
-                                        <span>Is delivered?</span>
+                                        <t t-if="record.is_delivered.raw_value">
+                                            <input type="checkbox" checked="checked" disabled="disabled"/>
+                                        </t>
+                                        <t t-if="!record.is_delivered.raw_value">
+                                            <input type="checkbox" disabled="disabled"/>
+                                        </t>
+                                        <span> Is delivered?</span>
                                     </div>
-                                </div>
-                                <div>
-                                    <t t-esc="record.quantity.value"/>
-                                </div>
-                                <div>
-                                    <t t-esc="record.total_price.value"/>
                                 </div>
                             </div>
                         </div>
@@ -83,10 +131,26 @@
         </field>
     </record>
 
+    <record id="view_stock_move_planning_date_form" model="ir.ui.view">
+    <field name="name">stock.move.planning.date.form</field>
+    <field name="model">stock.move.planning.date</field>
+    <field name="arch" type="xml">
+        <form string="Stock Move Planning Date">
+            <sheet>
+                <group>
+                    <field name="name" string="Fecha"/>
+                    <field name="sequence" string="Secuencia"/>
+                </group>
+            </sheet>
+        </form>
+    </field>
+    </record>
+
     <record id="action_stock_move_planning" model="ir.actions.act_window">
         <field name="name">Planning</field>
         <field name="res_model">stock.move.planning</field>
-        <field name="view_mode">tree,kanban</field>
+        <field name="view_mode">tree,form,kanban</field>
+        <field name="context">{'search_default_no_entregado_filter': 1}</field>
         <field name="help" type="html">
             <p class="o_view_nocontent_smiling_face">
                 Create your first planning
@@ -97,8 +161,19 @@
         </field>
     </record>
 
-    <!-- Define the menu item -->
-    <menuitem id="menu_stock_move_planning" name="Planning" parent="stock.menu_stock_root"
-              action="action_stock_move_planning" sequence="100"/>
+    <record id="action_res_partner_resource" model="ir.actions.act_window">
+        <field name="name">Resources</field>
+        <field name="res_model">res.partner</field>
+        <field name="view_mode">tree,form</field>
+        <field name="domain">[('is_resource','=',True)]</field>
+    </record>
+
+    <menuitem id="menu_stock_move_planning" name="Planning" parent="stock.menu_stock_root" sequence="100"/>
+
+    <menuitem id="menu_planning" name="Planning" parent="menu_stock_move_planning"
+              action="action_stock_move_planning" sequence="10"/>
+
+    <menuitem id="menu_res_partner_resource" name="Resources" parent="menu_stock_move_planning"
+              action="action_res_partner_resource" sequence="20"/>
 
 </odoo>

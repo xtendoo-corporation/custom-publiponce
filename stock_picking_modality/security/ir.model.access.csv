@@ -4,5 +4,5 @@ access_stock_picking_destiny,stock.picking.destiny,model_stock_picking_destiny,,
 access_stock_picking_modality_price,stock.picking.modality.price,model_stock_picking_modality_destiny_price,,1,1,1,1
 access_stock_picking_zone,stock.picking.zone,model_stock_picking_zone,,1,1,1,1
 access_stock_move_planning,access_stock_move_planning,stock_picking_modality.model_stock_move_planning,base.group_user,1,1,1,1
-stock_picking_modality.access_stock_move_planning_stage,access_stock_move_planning_stage,stock_picking_modality.model_stock_move_planning_stage,base.group_user,1,1,1,1
+access_stock_move_planning_date,access_stock_move_planning_date,model_stock_move_planning_date,base.group_user,1,1,1,1
 

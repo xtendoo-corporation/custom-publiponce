@@ -36,7 +36,6 @@ class StockMovePlanning(models.Model):
     res_partner_id = fields.Many2one(
         comodel_name='res.partner',
         string='Resource',
-        required=True,
         readonly=False,
         domain=[('is_resource', '=', True)],
     )
@@ -66,9 +65,9 @@ class StockMovePlanning(models.Model):
         string='Total price',
         compute='_compute_total_price',
     )
-    stage_id = fields.Many2one(
-        comodel_name='stock.move.planning.stage',
-        string='Stage',
+    date_id = fields.Many2one(
+        comodel_name='stock.move.planning.date',
+        string='Date',
     )
 
     @api.onchange('modality_id', 'destiny_id', 'zone_id')
@@ -127,4 +126,3 @@ class StockMovePlanning(models.Model):
                     'zone_id': []
                 }
             }
-
