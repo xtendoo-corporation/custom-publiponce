@@ -42,6 +42,11 @@ class StockMovePlanning(models.Model):
         readonly=False,
         domain=[('is_resource', '=', True)],
     )
+    partner_id = fields.Many2one(
+        comodel_name='res.partner',
+        string='Partner',
+        readonly=False,
+    )
     is_delivered = fields.Boolean(
         string='Delivered',
         default=False,

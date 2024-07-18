@@ -19,6 +19,7 @@ class StockPicking(models.Model):
                 'zone_id': line.zone_id.id if line.zone_id else False,
                 # 'res_partner_id': self.user_id.id if self.user_id else False,
                 'res_partner_id': False,
+                'partner_id': self.partner_id.id if self.partner_id else False,
                 'date_scheduled': self.scheduled_date if self.scheduled_date else False,
                 'quantity': line.quantity_done,
                 'is_delivered': False,

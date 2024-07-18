@@ -81,6 +81,7 @@
                 <field name="destiny_id"/>
                 <field name="zone_id"/>
                 <field name="res_partner_id"/>
+                <field name="partner_id"/>
                 <field name="date_scheduled"/>
                 <field name="quantity"/>
                 <field name="delivery_date"/>
@@ -133,11 +134,17 @@
                             </div>
                             <div class="col-12">
                                  <div>
-                                     <span class="badge rounded-pill bg-info" style="color: white; font-size: 1.05em;">
+                                     <span class="badge rounded-pill bg-info"
+                                           style="color: white; font-size: 1.05em; margin-bottom: 2px;">
                                          <t t-esc="record.res_partner_id.value"/>
                                      </span>
                                 </div>
                             </div>
+                             <div class="col-12">
+                                 <span class="badge rounded-pill bg-success" style="color: white; font-size: 1.05em;">
+                                         <t t-esc="record.partner_id.value"/>
+                                 </span>
+                             </div>
                             </div>
                         </div>
                         </div>
