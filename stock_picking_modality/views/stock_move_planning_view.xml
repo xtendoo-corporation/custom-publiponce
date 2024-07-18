@@ -60,6 +60,8 @@
                 <field name="quantity"/>
                 <field name="price"/>
                 <field name="total_price"/>
+                <filter string="Scheduled Date" name="group_by_date_scheduled" context="{'group_by':'date_scheduled:day'}"/>
+                <separator/>
                 <filter string="No entregado" name="no_entregado_filter" domain="[('is_delivered', '=', False)]"/>
                 <separator/>
                 <filter string="Resource" name="resource_filter" domain="[('res_partner_id', '!=', False)]"/>
@@ -73,57 +75,71 @@
         <field name="name">stock.move.planning.kanban</field>
         <field name="model">stock.move.planning</field>
         <field name="arch" type="xml">
-            <kanban default_group_by="date_id" class="o_kanban_small_column o_opportunity_kanban">
+            <kanban class="o_kanban_mobile" sample="1">
                 <field name="product_name"/>
                 <field name="modality_id"/>
                 <field name="destiny_id"/>
                 <field name="zone_id"/>
                 <field name="res_partner_id"/>
                 <field name="date_scheduled"/>
+                <field name="quantity"/>
                 <field name="delivery_date"/>
                 <field name="is_delivered"/>
-                <field name="date_id" widget="many2one" options="{'no_create': True}"/>
                 <templates>
                     <t t-name="kanban-box">
                         <div class="oe_kanban_global_click">
                             <div class="oe_kanban_details">
-                                <div class="o_kanban_record_title">
+                                <div class="o_kanban_record_title d-flex justify-content-between">
                                     <strong>
                                         <t t-esc="record.product_name.value"/>
-                                        <hr/>
+                                    </strong>
+                                    <strong style="text-align: right;">
+                                        <t t-esc="record.quantity.value"/>
                                     </strong>
                                 </div>
+                                <hr/>
+                        <div class="oe_kanban_details row">
+                            <div class="col-6">
                                 <div>
-                                    <strong>Modality: </strong>
-                                    <t t-esc="record.modality_id.value"/>
+                                    <span class="badge rounded-pill bg-dark"
+                                          style="color: white; font-size: 1.05em; margin-bottom: 2px;">
+                                        <t t-esc="record.modality_id.value"/>
+                                    </span>
                                 </div>
                                 <div>
-                                    <strong>Destiny: </strong>
-                                    <t t-esc="record.destiny_id.value"/>
+                                    <span class="badge rounded-pill bg-light" style="font-size: 1.05em; margin-bottom: 2px;">
+                                        <t t-esc="record.destiny_id.value"/>
+                                    </span>
                                 </div>
                                 <div>
-                                    <strong>Zone: </strong>
-                                    <t t-esc="record.zone_id.value"/>
+                                    <span class="badge rounded-pill bg-light" style="font-size: 1.05em; margin-bottom: 2px;">
+                                        <t t-esc="record.zone_id.value"/>
+                                    </span>
                                 </div>
+                            </div>
+                            <div class="col-6">
                                 <div>
-                                    <strong>Recurse: </strong>
-                                    <t t-esc="record.res_partner_id.value"/>
-                                </div>
-                                <div>
+                                    <i class="fa fa-clock-o" aria-label="Date" role="img" title="Date"/>
                                     <t t-esc="record.date_scheduled.value"/>
                                 </div>
                                 <div>
-                                    <div class="o-checkbox d-inline-block me-2">
-                                        <t t-if="record.is_delivered.raw_value">
-                                            <input type="checkbox" checked="checked" disabled="disabled"/>
-                                        </t>
-                                        <t t-if="!record.is_delivered.raw_value">
-                                            <input type="checkbox" disabled="disabled"/>
-                                        </t>
-                                        <span> Is delivered?</span>
-                                    </div>
+                                    <t t-if="record.is_delivered.raw_value">
+                                        <span class="badge rounded-pill bg-success"
+                                              style="color: white; font-size: 1.05em; margin-bottom: 2px;">
+                                            Entregado
+                                        </span>
+                                    </t>
                                 </div>
                             </div>
+                            <div class="col-12">
+                                 <div>
+                                     <span class="badge rounded-pill bg-info" style="color: white; font-size: 1.05em;">
+                                         <t t-esc="record.res_partner_id.value"/>
+                                     </span>
+                                </div>
+                            </div>
+                            </div>
+                        </div>
                         </div>
                     </t>
                 </templates>
@@ -131,26 +147,11 @@
         </field>
     </record>
 
-    <record id="view_stock_move_planning_date_form" model="ir.ui.view">
-    <field name="name">stock.move.planning.date.form</field>
-    <field name="model">stock.move.planning.date</field>
-    <field name="arch" type="xml">
-        <form string="Stock Move Planning Date">
-            <sheet>
-                <group>
-                    <field name="name" string="Fecha"/>
-                    <field name="sequence" string="Secuencia"/>
-                </group>
-            </sheet>
-        </form>
-    </field>
-    </record>
-
     <record id="action_stock_move_planning" model="ir.actions.act_window">
         <field name="name">Planning</field>
         <field name="res_model">stock.move.planning</field>
         <field name="view_mode">tree,form,kanban</field>
-        <field name="context">{'search_default_no_entregado_filter': 1}</field>
+        <field name="context">{'search_default_no_entregado_filter': 1, 'search_default_group_by_date_scheduled': 1}</field>
         <field name="help" type="html">
             <p class="o_view_nocontent_smiling_face">
                 Create your first planning

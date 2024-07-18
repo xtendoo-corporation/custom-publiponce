@@ -8,6 +8,9 @@ class StockMovePlanning(models.Model):
     _name = 'stock.move.planning'
     _inherit = ['mail.thread', 'mail.activity.mixin']
 
+    name = fields.Char(
+        string='Stock Move Planning',
+    )
     stock_move_id = fields.Many2one(
         comodel_name='stock.move',
         string='Stock Move',
@@ -15,7 +18,7 @@ class StockMovePlanning(models.Model):
         readonly=False,
     )
     product_id = fields.Many2one(
-        comodel_name='stock.move',
+        comodel_name='product.product',
         string='Product id',
     )
     product_name = fields.Char(
@@ -64,10 +67,6 @@ class StockMovePlanning(models.Model):
     total_price = fields.Float(
         string='Total price',
         compute='_compute_total_price',
-    )
-    date_id = fields.Many2one(
-        comodel_name='stock.move.planning.date',
-        string='Date',
     )
 
     @api.onchange('modality_id', 'destiny_id', 'zone_id')
