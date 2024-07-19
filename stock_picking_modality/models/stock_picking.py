@@ -25,9 +25,6 @@ class StockPicking(models.Model):
                 'is_delivered': False,
                 'delivery_date': False,
             })
-            print("*"*80)
-            print(line.product_id)
-            print(line.quantity_done)
         return res
 
         # max_line_qty = max(line.modality_id.line_qty for line in self.move_ids)

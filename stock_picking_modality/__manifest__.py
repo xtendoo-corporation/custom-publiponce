@@ -10,7 +10,8 @@
     "depends":
         [
             "stock",
-            "contacts"
+            "contacts",
+            "sale",
         ],
     "data":
         [
@@ -24,6 +25,7 @@
             "views/stock_picking_zone_view.xml",
             "views/res_partner_view.xml",
             "views/stock_move_planning_view.xml",
+            "views/view_order_form_publiponce.xml",
         ],
     'installable': True,
     'active': False,

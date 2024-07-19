@@ -54,13 +54,22 @@
                 <field name="destiny_id"/>
                 <field name="zone_id"/>
                 <field name="res_partner_id"/>
+                <field name="partner_id"/>
                 <field name="date_scheduled"/>
                 <field name="delivery_date"/>
                 <field name="is_delivered"/>
                 <field name="quantity"/>
                 <field name="price"/>
                 <field name="total_price"/>
-                <filter string="Scheduled Date" name="group_by_date_scheduled" context="{'group_by':'date_scheduled:day'}"/>
+                <filter string="Fecha planificada" name="group_by_date_scheduled" context="{'group_by':'date_scheduled:day'}"/>
+                <separator/>
+                <filter string="Modalidad" name="group_by_modality_id" context="{'group_by':'modality_id'}"/>
+                <separator/>
+                <filter string="Destino" name="group_by_destiny_id" context="{'group_by':'destiny_id'}"/>
+                <separator/>
+                <filter string="Zona" name="group_by_zone_id" context="{'group_by':'zone_id'}"/>
+                <separator/>
+                <filter string="Recurso" name="group_by_res_partner_id" context="{'group_by':'res_partner_id'}"/>
                 <separator/>
                 <filter string="No entregado" name="no_entregado_filter" domain="[('is_delivered', '=', False)]"/>
                 <separator/>

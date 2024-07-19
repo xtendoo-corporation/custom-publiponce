@@ -14,7 +14,6 @@ class StockMovePlanning(models.Model):
     stock_move_id = fields.Many2one(
         comodel_name='stock.move',
         string='Stock Move',
-        required=True,
         readonly=False,
     )
     product_id = fields.Many2one(
@@ -72,6 +71,10 @@ class StockMovePlanning(models.Model):
     total_price = fields.Float(
         string='Total price',
         compute='_compute_total_price',
+    )
+    order_id = fields.Many2one(
+        comodel_name='sale.order',
+        string='Order',
     )
 
     @api.onchange('modality_id', 'destiny_id', 'zone_id')
