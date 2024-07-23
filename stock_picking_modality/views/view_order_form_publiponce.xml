@@ -10,6 +10,12 @@
                     <span>Plannings</span>
                 </button>
             </xpath>
+            <xpath
+                expr="//field[@name='order_line']/tree/field[@name='product_uom_qty']" position="before">
+                <field name="modality_id"/>
+                <field name="destiny_id"/>
+                <field name="zone_id"/>
+            </xpath>
         </field>
     </record>
 </odoo>

@@ -61,7 +61,8 @@
                 <field name="quantity"/>
                 <field name="price"/>
                 <field name="total_price"/>
-                <filter string="Fecha planificada" name="group_by_date_scheduled" context="{'group_by':'date_scheduled:day'}"/>
+                <filter string="Fecha planificada" name="group_by_date_scheduled"
+                        context="{'group_by':'date_scheduled:day'}"/>
                 <separator/>
                 <filter string="Modalidad" name="group_by_modality_id" context="{'group_by':'modality_id'}"/>
                 <separator/>
@@ -75,7 +76,7 @@
                 <separator/>
                 <filter string="Resource" name="resource_filter" domain="[('res_partner_id', '!=', False)]"/>
                 <separator/>
-                <filter string="Delivered" name="entregado_filter" domain="[('is_delivered', '=', True)]" />
+                <filter string="Delivered" name="entregado_filter" domain="[('is_delivered', '=', True)]"/>
             </search>
         </field>
     </record>
@@ -105,57 +106,58 @@
                                     </strong>
                                     <strong style="text-align: right;">
                                         <t t-esc="record.quantity.value"/>
+                                        <t t-if="record.is_delivered.raw_value">
+                                            <span> </span>
+                                            <i class="fa fa-truck"/>
+                                        </t>
+                                        <t t-if="!record.is_delivered.raw_value">
+                                             <span> </span>
+                                            <i class="fa fa-times-circle" style="color: red;"/>
+                                        </t>
                                     </strong>
                                 </div>
                                 <hr/>
-                        <div class="oe_kanban_details row">
-                            <div class="col-6">
-                                <div>
-                                    <span class="badge rounded-pill bg-dark"
-                                          style="color: white; font-size: 1.05em; margin-bottom: 2px;">
-                                        <t t-esc="record.modality_id.value"/>
-                                    </span>
-                                </div>
-                                <div>
-                                    <span class="badge rounded-pill bg-light" style="font-size: 1.05em; margin-bottom: 2px;">
-                                        <t t-esc="record.destiny_id.value"/>
-                                    </span>
-                                </div>
-                                <div>
-                                    <span class="badge rounded-pill bg-light" style="font-size: 1.05em; margin-bottom: 2px;">
-                                        <t t-esc="record.zone_id.value"/>
-                                    </span>
+                                <div class="oe_kanban_details row">
+                                    <div class="col-12">
+                                        <div>
+                                            <span class="badge rounded-pill bg-dark"
+                                                  style="color: white; font-size: 1.05em; margin-bottom: 2px;">
+                                                <t t-esc="record.modality_id.value"/>
+                                            </span>
+                                            <span class="badge rounded-pill bg-light"
+                                                  style="font-size: 1.05em; margin-bottom: 2px;">
+                                                <t t-esc="record.destiny_id.value"/>
+                                            </span>
+                                            <span class="badge rounded-pill bg-light"
+                                                  style="font-size: 1.05em; margin-bottom: 2px;">
+                                                <t t-esc="record.zone_id.value"/>
+                                            </span>
+                                        </div>
+                                    </div>
+                                    <div class="col-12">
+                                        <div>
+                                            <span class="badge rounded-pill bg-info"
+                                                  style="color: white; font-size: 1.05em; margin-bottom: 2px;">
+                                                <t t-esc="record.res_partner_id.value"/>
+                                            </span>
+                                        </div>
+                                    </div>
+                                    <div class="col-12">
+                                        <t t-if="record.partner_id.value == 'Azure Interior'">
+                                            <div style="background-color: red; padding: 3px; border-radius: 12px;
+                                             display: inline-block; color: white; font-size: 1.05em;">
+                                                <t t-esc="record.partner_id.value"/>
+                                            </div>
+                                        </t>
+                                        <t t-else="">
+                                            <span class="badge rounded-pill bg-success"
+                                                  style="color: white; font-size: 1.05em;">
+                                                <t t-esc="record.partner_id.value"/>
+                                            </span>
+                                        </t>
+                                    </div>
                                 </div>
                             </div>
-                            <div class="col-6">
-                                <div>
-                                    <i class="fa fa-clock-o" aria-label="Date" role="img" title="Date"/>
-                                    <t t-esc="record.date_scheduled.value"/>
-                                </div>
-                                <div>
-                                    <t t-if="record.is_delivered.raw_value">
-                                        <span class="badge rounded-pill bg-success"
-                                              style="color: white; font-size: 1.05em; margin-bottom: 2px;">
-                                            Entregado
-                                        </span>
-                                    </t>
-                                </div>
-                            </div>
-                            <div class="col-12">
-                                 <div>
-                                     <span class="badge rounded-pill bg-info"
-                                           style="color: white; font-size: 1.05em; margin-bottom: 2px;">
-                                         <t t-esc="record.res_partner_id.value"/>
-                                     </span>
-                                </div>
-                            </div>
-                             <div class="col-12">
-                                 <span class="badge rounded-pill bg-success" style="color: white; font-size: 1.05em;">
-                                         <t t-esc="record.partner_id.value"/>
-                                 </span>
-                             </div>
-                            </div>
-                        </div>
                         </div>
                     </t>
                 </templates>
@@ -163,11 +165,40 @@
         </field>
     </record>
 
+    <record id="view_stock_move_planning_calendar" model="ir.ui.view">
+        <field name="name">stock.move.planning.calendar</field>
+        <field name="model">stock.move.planning</field>
+        <field name="arch" type="xml">
+            <calendar string="Stock Move Planning" date_start="date_scheduled" >
+                <field name="product_name"/>
+                <field name="modality_id"/>
+                <field name="destiny_id"/>
+                <field name="zone_id"/>
+                <field name="res_partner_id"/>
+                <field name="partner_id"/>
+                <field name="quantity"/>
+                <field name="is_delivered"/>
+            </calendar>
+        </field>
+    </record>
+
+    <record id="cron_mark_as_delivered" model="ir.cron">
+        <field name="name">Marcar como entregado</field>
+        <field name="model_id" ref="model_stock_move_planning"/>
+        <field name="state">code</field>
+        <field name="code">model.mark_as_delivered()</field>
+        <field name="interval_number">1</field>
+        <field name="interval_type">days</field>
+        <field name="numbercall">-1</field>
+        <field name="nextcall" eval="(DateTime.now() + timedelta(hours=1)).strftime('%Y-%m-%d %H:%M:%S')"/>
+    </record>
+
     <record id="action_stock_move_planning" model="ir.actions.act_window">
         <field name="name">Planning</field>
         <field name="res_model">stock.move.planning</field>
-        <field name="view_mode">tree,form,kanban</field>
-        <field name="context">{'search_default_no_entregado_filter': 1, 'search_default_group_by_date_scheduled': 1}</field>
+        <field name="view_mode">tree,form,kanban,calendar</field>
+        <field name="context">{'search_default_no_entregado_filter': 1, 'search_default_group_by_date_scheduled': 1}
+        </field>
         <field name="help" type="html">
             <p class="o_view_nocontent_smiling_face">
                 Create your first planning

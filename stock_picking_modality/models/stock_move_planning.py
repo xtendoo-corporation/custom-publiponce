@@ -1,5 +1,6 @@
 # Copyright 2023 Salvador, Abraham (https://xtendoo.es)
 # License AGPL-3.0 or later (http://www.gnu.org/licenses/agpl.html).
+from datetime import timedelta
 
 from odoo import api, fields, models
 
@@ -76,6 +77,10 @@ class StockMovePlanning(models.Model):
         comodel_name='sale.order',
         string='Order',
     )
+    order_line_id = fields.Many2one(
+        comodel_name='sale.order.line',
+        string='Order Line',
+    )
 
     @api.onchange('modality_id', 'destiny_id', 'zone_id')
     def _on_change_price(self):
@@ -133,3 +138,12 @@ class StockMovePlanning(models.Model):
                     'zone_id': []
                 }
             }
+
+    @api.model
+    def mark_as_delivered(self):
+        yesterday = fields.Date.today() - timedelta(days=1)
+        plannings = self.search([
+            ('date_scheduled', '=', yesterday),
+            ('is_delivered', '=', False),
+        ])
+        plannings.write({'is_delivered': True})

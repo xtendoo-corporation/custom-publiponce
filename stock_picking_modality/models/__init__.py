@@ -8,3 +8,4 @@ from . import stock_picking_zone
 from . import res_partner
 from . import stock_move_planning
 from . import sale_order
+from . import sale_order_line
