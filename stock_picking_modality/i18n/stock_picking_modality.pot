@@ -6,8 +6,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 16.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2024-07-17 08:16+0000\n"
-"PO-Revision-Date: 2024-07-17 08:16+0000\n"
+"POT-Creation-Date: 2024-07-24 07:34+0000\n"
+"PO-Revision-Date: 2024-07-24 07:34+0000\n"
 "Last-Translator: \n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
@@ -16,28 +16,15 @@ msgstr ""
 "Plural-Forms: \n"
 
 #. module: stock_picking_modality
-#: model_terms:ir.ui.view,arch_db:stock_picking_modality.view_stock_move_planning_kanban
-msgid "<span> Is delivered?</span>"
+#: model:ir.model.fields,help:stock_picking_modality.field_stock_move_planning__color
+msgid ""
+"1-Rojo, 2-Naranja, 3-Verde lima, 4-Azul, 5-Morado Oscuro, 6-Rojo anaranjado,"
+" 7-Azul verdoso, 8-Azul oscuro, 9-Burdeos, 10-Verde, 11-Morado Odoo, "
 msgstr ""
 
 #. module: stock_picking_modality
-#: model_terms:ir.ui.view,arch_db:stock_picking_modality.view_stock_move_planning_kanban
-msgid "<strong>Destiny: </strong>"
-msgstr ""
-
-#. module: stock_picking_modality
-#: model_terms:ir.ui.view,arch_db:stock_picking_modality.view_stock_move_planning_kanban
-msgid "<strong>Modality: </strong>"
-msgstr ""
-
-#. module: stock_picking_modality
-#: model_terms:ir.ui.view,arch_db:stock_picking_modality.view_stock_move_planning_kanban
-msgid "<strong>Recurse: </strong>"
-msgstr ""
-
-#. module: stock_picking_modality
-#: model_terms:ir.ui.view,arch_db:stock_picking_modality.view_stock_move_planning_kanban
-msgid "<strong>Zone: </strong>"
+#: model_terms:ir.ui.view,arch_db:stock_picking_modality.view_order_form_publiponce
+msgid "<span>Plannings</span>"
 msgstr ""
 
 #. module: stock_picking_modality
@@ -76,6 +63,11 @@ msgid "Attachment Count"
 msgstr ""
 
 #. module: stock_picking_modality
+#: model:ir.model.fields,field_description:stock_picking_modality.field_stock_move_planning__color
+msgid "Color"
+msgstr ""
+
+#. module: stock_picking_modality
 #: model:ir.model,name:stock_picking_modality.model_res_partner
 msgid "Contact"
 msgstr ""
@@ -87,7 +79,6 @@ msgstr ""
 
 #. module: stock_picking_modality
 #: model:ir.model.fields,field_description:stock_picking_modality.field_stock_move_planning__create_uid
-#: model:ir.model.fields,field_description:stock_picking_modality.field_stock_move_planning_date__create_uid
 #: model:ir.model.fields,field_description:stock_picking_modality.field_stock_picking_destiny__create_uid
 #: model:ir.model.fields,field_description:stock_picking_modality.field_stock_picking_modality__create_uid
 #: model:ir.model.fields,field_description:stock_picking_modality.field_stock_picking_modality_destiny_price__create_uid
@@ -97,18 +88,11 @@ msgstr ""
 
 #. module: stock_picking_modality
 #: model:ir.model.fields,field_description:stock_picking_modality.field_stock_move_planning__create_date
-#: model:ir.model.fields,field_description:stock_picking_modality.field_stock_move_planning_date__create_date
 #: model:ir.model.fields,field_description:stock_picking_modality.field_stock_picking_destiny__create_date
 #: model:ir.model.fields,field_description:stock_picking_modality.field_stock_picking_modality__create_date
 #: model:ir.model.fields,field_description:stock_picking_modality.field_stock_picking_modality_destiny_price__create_date
 #: model:ir.model.fields,field_description:stock_picking_modality.field_stock_picking_zone__create_date
 msgid "Created on"
-msgstr ""
-
-#. module: stock_picking_modality
-#: model:ir.model.fields,field_description:stock_picking_modality.field_stock_move_planning__date_id
-#: model:ir.model.fields,field_description:stock_picking_modality.field_stock_move_planning_date__name
-msgid "Date"
 msgstr ""
 
 #. module: stock_picking_modality
@@ -128,6 +112,11 @@ msgid "Delivery Date"
 msgstr ""
 
 #. module: stock_picking_modality
+#: model_terms:ir.ui.view,arch_db:stock_picking_modality.view_stock_move_planning_search
+msgid "Destino"
+msgstr ""
+
+#. module: stock_picking_modality
 #: model:ir.actions.act_window,name:stock_picking_modality.action_stock_picking_destiny
 #: model:ir.model,name:stock_picking_modality.model_stock_picking_destiny
 #: model:ir.ui.menu,name:stock_picking_modality.stock_picking_destiny_menu
@@ -135,6 +124,8 @@ msgid "Destino de entregas"
 msgstr ""
 
 #. module: stock_picking_modality
+#: model:ir.model.fields,field_description:stock_picking_modality.field_sale_order__destiny_id
+#: model:ir.model.fields,field_description:stock_picking_modality.field_sale_order_line__destiny_id
 #: model:ir.model.fields,field_description:stock_picking_modality.field_stock_move__destiny_id
 #: model:ir.model.fields,field_description:stock_picking_modality.field_stock_move_line__destiny_id
 #: model:ir.model.fields,field_description:stock_picking_modality.field_stock_move_planning__destiny_id
@@ -145,7 +136,6 @@ msgstr ""
 
 #. module: stock_picking_modality
 #: model:ir.model.fields,field_description:stock_picking_modality.field_stock_move_planning__display_name
-#: model:ir.model.fields,field_description:stock_picking_modality.field_stock_move_planning_date__display_name
 #: model:ir.model.fields,field_description:stock_picking_modality.field_stock_picking_destiny__display_name
 #: model:ir.model.fields,field_description:stock_picking_modality.field_stock_picking_modality__display_name
 #: model:ir.model.fields,field_description:stock_picking_modality.field_stock_picking_modality_destiny_price__display_name
@@ -156,6 +146,11 @@ msgstr ""
 #. module: stock_picking_modality
 #: model_terms:ir.ui.view,arch_db:stock_picking_modality.view_move_form_inherit
 msgid "Entregas"
+msgstr ""
+
+#. module: stock_picking_modality
+#: model_terms:ir.ui.view,arch_db:stock_picking_modality.view_stock_move_planning_search
+msgid "Fecha planificada"
 msgstr ""
 
 #. module: stock_picking_modality
@@ -185,7 +180,6 @@ msgstr ""
 
 #. module: stock_picking_modality
 #: model:ir.model.fields,field_description:stock_picking_modality.field_stock_move_planning__id
-#: model:ir.model.fields,field_description:stock_picking_modality.field_stock_move_planning_date__id
 #: model:ir.model.fields,field_description:stock_picking_modality.field_stock_picking_destiny__id
 #: model:ir.model.fields,field_description:stock_picking_modality.field_stock_picking_modality__id
 #: model:ir.model.fields,field_description:stock_picking_modality.field_stock_picking_modality_destiny_price__id
@@ -226,7 +220,6 @@ msgstr ""
 
 #. module: stock_picking_modality
 #: model:ir.model.fields,field_description:stock_picking_modality.field_stock_move_planning____last_update
-#: model:ir.model.fields,field_description:stock_picking_modality.field_stock_move_planning_date____last_update
 #: model:ir.model.fields,field_description:stock_picking_modality.field_stock_picking_destiny____last_update
 #: model:ir.model.fields,field_description:stock_picking_modality.field_stock_picking_modality____last_update
 #: model:ir.model.fields,field_description:stock_picking_modality.field_stock_picking_modality_destiny_price____last_update
@@ -236,7 +229,6 @@ msgstr ""
 
 #. module: stock_picking_modality
 #: model:ir.model.fields,field_description:stock_picking_modality.field_stock_move_planning__write_uid
-#: model:ir.model.fields,field_description:stock_picking_modality.field_stock_move_planning_date__write_uid
 #: model:ir.model.fields,field_description:stock_picking_modality.field_stock_picking_destiny__write_uid
 #: model:ir.model.fields,field_description:stock_picking_modality.field_stock_picking_modality__write_uid
 #: model:ir.model.fields,field_description:stock_picking_modality.field_stock_picking_modality_destiny_price__write_uid
@@ -246,7 +238,6 @@ msgstr ""
 
 #. module: stock_picking_modality
 #: model:ir.model.fields,field_description:stock_picking_modality.field_stock_move_planning__write_date
-#: model:ir.model.fields,field_description:stock_picking_modality.field_stock_move_planning_date__write_date
 #: model:ir.model.fields,field_description:stock_picking_modality.field_stock_picking_destiny__write_date
 #: model:ir.model.fields,field_description:stock_picking_modality.field_stock_picking_modality__write_date
 #: model:ir.model.fields,field_description:stock_picking_modality.field_stock_picking_modality_destiny_price__write_date
@@ -265,6 +256,12 @@ msgid "Main Attachment"
 msgstr ""
 
 #. module: stock_picking_modality
+#: model:ir.actions.server,name:stock_picking_modality.cron_mark_as_delivered_ir_actions_server
+#: model:ir.cron,cron_name:stock_picking_modality.cron_mark_as_delivered
+msgid "Marcar como entregado"
+msgstr ""
+
+#. module: stock_picking_modality
 #: model:ir.model.fields,field_description:stock_picking_modality.field_stock_move_planning__message_has_error
 msgid "Message Delivery error"
 msgstr ""
@@ -272,6 +269,11 @@ msgstr ""
 #. module: stock_picking_modality
 #: model:ir.model.fields,field_description:stock_picking_modality.field_stock_move_planning__message_ids
 msgid "Messages"
+msgstr ""
+
+#. module: stock_picking_modality
+#: model_terms:ir.ui.view,arch_db:stock_picking_modality.view_stock_move_planning_search
+msgid "Modalidad"
 msgstr ""
 
 #. module: stock_picking_modality
@@ -286,6 +288,8 @@ msgid "Modalidades de entrega"
 msgstr ""
 
 #. module: stock_picking_modality
+#: model:ir.model.fields,field_description:stock_picking_modality.field_sale_order__modality_id
+#: model:ir.model.fields,field_description:stock_picking_modality.field_sale_order_line__modality_id
 #: model:ir.model.fields,field_description:stock_picking_modality.field_stock_move__modality_id
 #: model:ir.model.fields,field_description:stock_picking_modality.field_stock_move_line__modality_id
 #: model:ir.model.fields,field_description:stock_picking_modality.field_stock_move_planning__modality_id
@@ -327,6 +331,11 @@ msgid "Next Activity Type"
 msgstr ""
 
 #. module: stock_picking_modality
+#: model_terms:ir.ui.view,arch_db:stock_picking_modality.view_stock_move_planning_search
+msgid "No entregado"
+msgstr ""
+
+#. module: stock_picking_modality
 #: model:ir.model.fields,field_description:stock_picking_modality.field_stock_move_planning__message_needaction_counter
 msgid "Number of Actions"
 msgstr ""
@@ -347,6 +356,21 @@ msgid "Number of messages with delivery error"
 msgstr ""
 
 #. module: stock_picking_modality
+#: model:ir.model.fields,field_description:stock_picking_modality.field_stock_move_planning__order_id
+msgid "Order"
+msgstr ""
+
+#. module: stock_picking_modality
+#: model:ir.model.fields,field_description:stock_picking_modality.field_stock_move_planning__order_line_id
+msgid "Order Line"
+msgstr ""
+
+#. module: stock_picking_modality
+#: model:ir.model.fields,field_description:stock_picking_modality.field_stock_move_planning__partner_id
+msgid "Partner"
+msgstr ""
+
+#. module: stock_picking_modality
 #: model:ir.actions.act_window,name:stock_picking_modality.action_stock_move_planning
 #: model:ir.ui.menu,name:stock_picking_modality.menu_planning
 #: model:ir.ui.menu,name:stock_picking_modality.menu_stock_move_planning
@@ -357,6 +381,11 @@ msgstr ""
 #: model:ir.model.fields,field_description:stock_picking_modality.field_stock_move__price
 #: model:ir.model.fields,field_description:stock_picking_modality.field_stock_move_line__price
 msgid "Precio"
+msgstr ""
+
+#. module: stock_picking_modality
+#: model:ir.model.fields,field_description:stock_picking_modality.field_sale_order_line__price_fee
+msgid "Precio Tarifa"
 msgstr ""
 
 #. module: stock_picking_modality
@@ -397,6 +426,11 @@ msgid "Quantity"
 msgstr ""
 
 #. module: stock_picking_modality
+#: model_terms:ir.ui.view,arch_db:stock_picking_modality.view_stock_move_planning_search
+msgid "Recurso"
+msgstr ""
+
+#. module: stock_picking_modality
 #: model:ir.model.fields,field_description:stock_picking_modality.field_stock_move_planning__res_partner_id
 #: model_terms:ir.ui.view,arch_db:stock_picking_modality.view_stock_move_planning_search
 msgid "Resource"
@@ -414,8 +448,13 @@ msgid "Responsible User"
 msgstr ""
 
 #. module: stock_picking_modality
-#: model:ir.model.fields,field_description:stock_picking_modality.field_stock_move_planning_date__sequence
-msgid "Sequence"
+#: model:ir.model,name:stock_picking_modality.model_sale_order
+msgid "Sales Order"
+msgstr ""
+
+#. module: stock_picking_modality
+#: model:ir.model,name:stock_picking_modality.model_sale_order_line
+msgid "Sales Order Line"
 msgstr ""
 
 #. module: stock_picking_modality
@@ -434,15 +473,12 @@ msgid "Stock Move"
 msgstr ""
 
 #. module: stock_picking_modality
+#: model:ir.model.fields,field_description:stock_picking_modality.field_stock_move_planning__name
+#: model_terms:ir.ui.view,arch_db:stock_picking_modality.view_stock_move_planning_calendar
 #: model_terms:ir.ui.view,arch_db:stock_picking_modality.view_stock_move_planning_form
 #: model_terms:ir.ui.view,arch_db:stock_picking_modality.view_stock_move_planning_search
 #: model_terms:ir.ui.view,arch_db:stock_picking_modality.view_stock_move_planning_tree
 msgid "Stock Move Planning"
-msgstr ""
-
-#. module: stock_picking_modality
-#: model:ir.model,name:stock_picking_modality.model_stock_move_planning_date
-msgid "Stock Move Planning Date"
 msgstr ""
 
 #. module: stock_picking_modality
@@ -493,12 +529,19 @@ msgid "Website communication history"
 msgstr ""
 
 #. module: stock_picking_modality
+#: model_terms:ir.ui.view,arch_db:stock_picking_modality.view_stock_move_planning_search
+msgid "Zona"
+msgstr ""
+
+#. module: stock_picking_modality
 #: model:ir.actions.act_window,name:stock_picking_modality.action_stock_picking_zone
 #: model:ir.model,name:stock_picking_modality.model_stock_picking_zone
 msgid "Zona de entregas"
 msgstr ""
 
 #. module: stock_picking_modality
+#: model:ir.model.fields,field_description:stock_picking_modality.field_sale_order__zone_id
+#: model:ir.model.fields,field_description:stock_picking_modality.field_sale_order_line__zone_id
 #: model:ir.model.fields,field_description:stock_picking_modality.field_stock_move__zone_id
 #: model:ir.model.fields,field_description:stock_picking_modality.field_stock_move_line__zone_id
 #: model:ir.model.fields,field_description:stock_picking_modality.field_stock_move_planning__zone_id

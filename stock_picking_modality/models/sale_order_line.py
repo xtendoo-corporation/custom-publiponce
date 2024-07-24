@@ -19,6 +19,23 @@ class SaleOrderLine(models.Model):
         comodel_name='stock.picking.zone',
         string='Zone',
     )
+    price_fee = fields.Float(
+        comodel_name='stock.picking.modality.destiny.price',
+        string='Precio Tarifa',
+    )
+
+    @api.onchange('zone_id')
+    def _onchange_price_fee(self):
+        if self.modality_id and self.destiny_id and self.zone_id:
+            price_record = self.env['stock.picking.modality.destiny.price'].search([
+                ('modality_id', '=', self.modality_id.id),
+                ('destiny_id', '=', self.destiny_id.id),
+                ('zone_id', '=', self.zone_id.id),
+            ], limit=1)
+            if price_record:
+                self.price_fee = price_record.price
+        else:
+            self.price_fee = 0
 
     @api.onchange('modality_id')
     def _onchange_modality_id(self):

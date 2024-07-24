@@ -15,6 +15,7 @@
                 <field name="modality_id"/>
                 <field name="destiny_id"/>
                 <field name="zone_id"/>
+                <field name="price_fee"/>
             </xpath>
         </field>
     </record>

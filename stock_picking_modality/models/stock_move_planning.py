@@ -81,6 +81,32 @@ class StockMovePlanning(models.Model):
         comodel_name='sale.order.line',
         string='Order Line',
     )
+    color = fields.Integer(
+        string='Color',
+        help='1-Rojo, 2-Naranja, 3-Verde lima, 4-Azul, 5-Morado Oscuro, 6-Rojo anaranjado,'
+                    ' 7-Azul verdoso, 8-Azul oscuro, 9-Burdeos, 10-Verde, 11-Morado Odoo, '
+    )
+    tag_ids = fields.Many2many(
+        comodel_name='res.partner',
+        readonly=True,
+        string='Cliente',
+    )
+    partner_color = fields.Integer(
+        string='Partner Color',
+        compute='_compute_partner_color'
+    )
+
+    @api.depends('partner_id')
+    def _compute_partner_color(self):
+        for record in self:
+            record.partner_color = record.partner_id.color if record.partner_id else 0
+
+    @api.model
+    def create(self, vals):
+        if 'partner_id' in vals:
+            partner_id = vals['partner_id']
+            vals['tag_ids'] = [(6, 0, [partner_id])]
+        return super(StockMovePlanning, self).create(vals)
 
     @api.onchange('modality_id', 'destiny_id', 'zone_id')
     def _on_change_price(self):

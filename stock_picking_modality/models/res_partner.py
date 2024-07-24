@@ -11,3 +11,9 @@ class ResPartner(models.Model):
         string='Is Resource',
         default=False,
     )
+    color = fields.Integer(
+        string='Color Index',
+    )
+    color2 = fields.Char(
+        string='Color 2',
+    )

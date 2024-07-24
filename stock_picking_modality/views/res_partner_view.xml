@@ -8,6 +8,8 @@
             <xpath
                 expr="//field[@name='vat']" position="after">
                 <field name="is_resource"/>
+                <field name="color" widget="color_picker"/>
+                <field name="color2" widget="color"/>
             </xpath>
         </field>
     </record>

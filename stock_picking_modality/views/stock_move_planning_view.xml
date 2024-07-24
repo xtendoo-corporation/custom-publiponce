@@ -38,6 +38,8 @@
                         <field name="quantity"/>
                         <field name="price"/>
                         <field name="total_price"/>
+                        <field name="color"/>
+                        <field name="tag_ids" widget="many2many_tags" options="{'color_field': 'color','no_create': True}, 'no_create_edit': True}"/>
                     </group>
                 </sheet>
             </form>
@@ -96,9 +98,11 @@
                 <field name="quantity"/>
                 <field name="delivery_date"/>
                 <field name="is_delivered"/>
+                <field name="color"/>
+                <field name="partner_color"/>
                 <templates>
                     <t t-name="kanban-box">
-                        <div class="oe_kanban_global_click">
+                        <div t-attf-class="#{kanban_color(record.partner_color.raw_value)} oe_kanban_global_click">
                             <div class="oe_kanban_details">
                                 <div class="o_kanban_record_title d-flex justify-content-between">
                                     <strong>
@@ -109,10 +113,6 @@
                                         <t t-if="record.is_delivered.raw_value">
                                             <span> </span>
                                             <i class="fa fa-truck"/>
-                                        </t>
-                                        <t t-if="!record.is_delivered.raw_value">
-                                             <span> </span>
-                                            <i class="fa fa-times-circle" style="color: red;"/>
                                         </t>
                                     </strong>
                                 </div>
@@ -143,18 +143,11 @@
                                         </div>
                                     </div>
                                     <div class="col-12">
-                                        <t t-if="record.partner_id.value == 'Azure Interior'">
-                                            <div style="background-color: red; padding: 3px; border-radius: 12px;
-                                             display: inline-block; color: white; font-size: 1.05em;">
-                                                <t t-esc="record.partner_id.value"/>
-                                            </div>
-                                        </t>
-                                        <t t-else="">
-                                            <span class="badge rounded-pill bg-success"
-                                                  style="color: white; font-size: 1.05em;">
-                                                <t t-esc="record.partner_id.value"/>
-                                            </span>
-                                        </t>
+<!--                                        <span class="badge rounded-pill bg-success"-->
+<!--                                              style="color: white; font-size: 1.05em;">-->
+                                        <field name="tag_ids" widget="many2many_tags" options="{'color_field': 'color'}"/>
+<!--                                            <t t-esc="record.partner_id.value"/>-->
+<!--                                        </span>-->
                                     </div>
                                 </div>
                             </div>
