@@ -14,6 +14,3 @@ class ResPartner(models.Model):
     color = fields.Integer(
         string='Color Index',
     )
-    color2 = fields.Char(
-        string='Color 2',
-    )

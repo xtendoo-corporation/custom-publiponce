@@ -11,6 +11,7 @@ class StockMovePlanning(models.Model):
 
     name = fields.Char(
         string='Stock Move Planning',
+        compute='_compute_name'
     )
     stock_move_id = fields.Many2one(
         comodel_name='stock.move',
@@ -60,6 +61,11 @@ class StockMovePlanning(models.Model):
         required=True,
         readonly=False,
     )
+    date_scheduled_time = fields.Datetime(
+        string='Date Scheduled time',
+        required=True,
+        readonly=False,
+    )
     quantity = fields.Float(
         string='Quantity',
         required=True,
@@ -95,6 +101,11 @@ class StockMovePlanning(models.Model):
         string='Partner Color',
         compute='_compute_partner_color'
     )
+
+    @api.depends('product_name', 'quantity')
+    def _compute_name(self):
+        for record in self:
+            record.name = f"{record.product_name} - {record.quantity}"
 
     @api.depends('partner_id')
     def _compute_partner_color(self):

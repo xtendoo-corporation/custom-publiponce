@@ -33,6 +33,7 @@
                         <field name="zone_id"/>
                         <field name="res_partner_id"/>
                         <field name="date_scheduled"/>
+                        <field name="date_scheduled_time"/>
                         <field name="delivery_date"/>
                         <field name="is_delivered"/>
                         <field name="quantity"/>
@@ -162,15 +163,12 @@
         <field name="name">stock.move.planning.calendar</field>
         <field name="model">stock.move.planning</field>
         <field name="arch" type="xml">
-            <calendar string="Stock Move Planning" date_start="date_scheduled" >
-                <field name="product_name"/>
+            <calendar string="Stock Move Planning" date_start="date_scheduled" color="partner_color" mode="month" hide_time="true">
                 <field name="modality_id"/>
                 <field name="destiny_id"/>
                 <field name="zone_id"/>
-                <field name="res_partner_id"/>
-                <field name="partner_id"/>
-                <field name="quantity"/>
-                <field name="is_delivered"/>
+                <field name="partner_id" avatar_field="avatar_128"/>
+                <field name="res_partner_id" avatar_field="avatar_128" />
             </calendar>
         </field>
     </record>

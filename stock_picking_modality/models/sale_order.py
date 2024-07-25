@@ -1,5 +1,6 @@
 # Copyright 2023 Salvador, Abraham (https://xtendoo.es)
 # License AGPL-3.0 or later (http://www.gnu.org/licenses/agpl.html).
+from datetime import datetime, timedelta
 
 from odoo import api, fields, models
 
@@ -23,6 +24,12 @@ class SaleOrder(models.Model):
     def action_confirm(self):
         res = super().action_confirm()
         for line in self.order_line:
+            date_scheduled = self.date_order if self.date_order else False
+            # existing_plannings = self.env['stock.move.planning'].search([
+            #     ('date_scheduled', '=', date_scheduled)
+            # ])
+            # planning_count = len(existing_plannings)
+            # scheduled_time = datetime.combine(date_scheduled, datetime.min.time()) + timedelta(hours=8 + planning_count)
             self.env['stock.move.planning'].create({
                 'product_id': line.product_id.id,
                 'product_name': line.product_id.name,
@@ -33,7 +40,8 @@ class SaleOrder(models.Model):
                 'order_id': self.id,
                 'order_line_id': line.id,
                 'partner_id': self.partner_id.id if self.partner_id else False,
-                'date_scheduled': self.date_order if self.date_order else False,
+                'date_scheduled': date_scheduled,
+                # 'date_scheduled_time': scheduled_time,
                 'quantity': line.product_uom_qty,
                 'is_delivered': False,
                 'delivery_date': False,
