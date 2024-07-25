@@ -6,8 +6,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 16.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2024-07-24 07:34+0000\n"
-"PO-Revision-Date: 2024-07-24 07:34+0000\n"
+"POT-Creation-Date: 2024-07-25 07:50+0000\n"
+"PO-Revision-Date: 2024-07-25 07:50+0000\n"
 "Last-Translator: \n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
@@ -53,18 +53,24 @@ msgid "Activity Type Icon"
 msgstr "Icono de tipo de actividad"
 
 #. module: stock_picking_modality
-#: model_terms:ir.ui.view,arch_db:stock_picking_modality.view_stock_picking_line_custom
-msgid "Are you sure you want to validate?"
-msgstr "¿Estás seguro de que quieres validar?"
-
-#. module: stock_picking_modality
 #: model:ir.model.fields,field_description:stock_picking_modality.field_stock_move_planning__message_attachment_count
 msgid "Attachment Count"
 msgstr "Recuento de archivos adjuntos"
 
 #. module: stock_picking_modality
+#: model:ir.model.fields,field_description:stock_picking_modality.field_stock_move_planning__tag_ids
+msgid "Cliente"
+msgstr ""
+
+#. module: stock_picking_modality
 #: model:ir.model.fields,field_description:stock_picking_modality.field_stock_move_planning__color
 msgid "Color"
+msgstr ""
+
+#. module: stock_picking_modality
+#: model:ir.model.fields,field_description:stock_picking_modality.field_res_partner__color
+#: model:ir.model.fields,field_description:stock_picking_modality.field_res_users__color
+msgid "Color Index"
 msgstr ""
 
 #. module: stock_picking_modality
@@ -99,6 +105,11 @@ msgstr "Creado en"
 #: model:ir.model.fields,field_description:stock_picking_modality.field_stock_move_planning__date_scheduled
 msgid "Date Scheduled"
 msgstr "Fecha planificada"
+
+#. module: stock_picking_modality
+#: model:ir.model.fields,field_description:stock_picking_modality.field_stock_move_planning__date_scheduled_time
+msgid "Date Scheduled time"
+msgstr "Fecha planificada por hora"
 
 #. module: stock_picking_modality
 #: model:ir.model.fields,field_description:stock_picking_modality.field_stock_move_planning__is_delivered
@@ -372,6 +383,11 @@ msgid "Partner"
 msgstr "Contacto"
 
 #. module: stock_picking_modality
+#: model:ir.model.fields,field_description:stock_picking_modality.field_stock_move_planning__partner_color
+msgid "Partner Color"
+msgstr "Color del contacto"
+
+#. module: stock_picking_modality
 #: model:ir.actions.act_window,name:stock_picking_modality.action_stock_move_planning
 #: model:ir.ui.menu,name:stock_picking_modality.menu_planning
 #: model:ir.ui.menu,name:stock_picking_modality.menu_stock_move_planning
@@ -517,11 +533,6 @@ msgstr "Tipo de actividad de excepción registrada."
 #: model:ir.model.constraint,message:stock_picking_modality.constraint_stock_picking_modality_destiny_price_unique_destiny_id_modality
 msgid "Un destino solo puede tener un precio para una modalidad."
 msgstr ""
-
-#. module: stock_picking_modality
-#: model_terms:ir.ui.view,arch_db:stock_picking_modality.view_stock_picking_line_custom
-msgid "Validate"
-msgstr "Validar"
 
 #. module: stock_picking_modality
 #: model:ir.model.fields,field_description:stock_picking_modality.field_stock_move_planning__website_message_ids

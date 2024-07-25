@@ -39,7 +39,6 @@
                         <field name="quantity"/>
                         <field name="price"/>
                         <field name="total_price"/>
-                        <field name="color"/>
                         <field name="tag_ids" widget="many2many_tags" options="{'color_field': 'color','no_create': True}, 'no_create_edit': True}"/>
                     </group>
                 </sheet>
@@ -163,7 +162,8 @@
         <field name="name">stock.move.planning.calendar</field>
         <field name="model">stock.move.planning</field>
         <field name="arch" type="xml">
-            <calendar string="Stock Move Planning" date_start="date_scheduled" color="partner_color" mode="month" hide_time="true">
+<!--            mode="month"-->
+            <calendar string="Stock Move Planning" date_start="date_scheduled_time" color="partner_color" hide_time="true">
                 <field name="modality_id"/>
                 <field name="destiny_id"/>
                 <field name="zone_id"/>
