@@ -101,6 +101,16 @@ class StockMovePlanning(models.Model):
         string='Partner Color',
         compute='_compute_partner_color'
     )
+    is_stock_sufficient = fields.Boolean(
+        string='Is Stock Sufficient',
+        compute='_compute_is_stock_sufficient'
+    )
+
+    @api.depends('product_id', 'quantity')
+    def _compute_is_stock_sufficient(self):
+        for record in self:
+            product_qty_available = record.product_id.qty_available
+            record.is_stock_sufficient = product_qty_available >= record.quantity
 
     @api.depends('product_name', 'quantity')
     def _compute_name(self):
