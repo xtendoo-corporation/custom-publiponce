@@ -70,6 +70,8 @@ class StockMovePlanning(models.Model):
         string='Quantity',
         required=True,
         readonly=False,
+        compute='_compute_qty',
+        inverse='_inverse_qty',
     )
     price = fields.Float(
         string='Price',
@@ -101,16 +103,33 @@ class StockMovePlanning(models.Model):
         string='Partner Color',
         compute='_compute_partner_color'
     )
-    is_stock_sufficient = fields.Boolean(
-        string='Is Stock Sufficient',
-        compute='_compute_is_stock_sufficient'
+    in_stock = fields.Boolean(
+        string='In Stock',
+        compute='_compute_in_stock',
+        store=True,
     )
 
-    @api.depends('product_id', 'quantity')
-    def _compute_is_stock_sufficient(self):
+    @api.depends('order_line_id')
+    def _compute_qty(self):
         for record in self:
-            product_qty_available = record.product_id.qty_available
-            record.is_stock_sufficient = product_qty_available >= record.quantity
+            record.quantity = record.order_line_id.product_uom_qty if record.order_line_id else 0
+
+    def _inverse_qty(self):
+        for record in self:
+            if record.order_line_id:
+                record.order_line_id.product_uom_qty = record.quantity
+
+    @api.depends('product_id', 'quantity')
+    def _compute_in_stock(self):
+        for record in self:
+            if record.product_id:
+                stock_quant = self.env['stock.quant'].search([
+                    ('product_id', '=', record.product_id.id),
+                    ('location_id.usage', '=', 'internal')
+                ], limit=1)
+                record.in_stock = stock_quant.quantity >= record.quantity
+            else:
+                record.in_stock = False
 
     @api.depends('product_name', 'quantity')
     def _compute_name(self):

@@ -34,6 +34,7 @@ class SaleOrderLine(models.Model):
             ], limit=1)
             if price_record:
                 self.price_fee = price_record.price
+                self.purchase_price = self.price_fee
         else:
             self.price_fee = 0
 

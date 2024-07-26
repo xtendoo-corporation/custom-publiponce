@@ -108,7 +108,7 @@
                 <field name="is_delivered"/>
                 <field name="color"/>
                 <field name="partner_color"/>
-                <field name="is_stock_sufficient"/>
+                <field name="in_stock"/>
                 <templates>
                     <t t-name="kanban-box">
                         <div t-attf-class="#{kanban_color(record.partner_color.raw_value)} oe_kanban_global_click">
@@ -117,14 +117,26 @@
                                     <strong>
                                         <t t-esc="record.product_name.value"/>
                                     </strong>
+                                    <t t-if="record.in_stock.raw_value">
                                     <strong
-                                        t-attf-style="text-align: right; color: #{record.is_stock_sufficient ? 'black' : 'red'};">
+                                        t-attf-style="text-align: right;">
                                         <t t-esc="record.quantity.value"/>
                                         <t t-if="record.is_delivered.raw_value">
                                             <span> </span>
                                             <i class="fa fa-truck"/>
                                         </t>
                                     </strong>
+                                    </t>
+                                    <t t-if="!record.in_stock.raw_value">
+                                    <strong
+                                        t-attf-style="text-align: right; color: red">
+                                        <t t-esc="record.quantity.value"/>
+                                        <t t-if="record.is_delivered.raw_value">
+                                            <span> </span>
+                                            <i class="fa fa-truck"/>
+                                        </t>
+                                    </strong>
+                                    </t>
                                 </div>
                                 <hr/>
                                 <div class="oe_kanban_details row">
