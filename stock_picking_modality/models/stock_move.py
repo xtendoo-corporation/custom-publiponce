@@ -7,17 +7,27 @@ from odoo import api, fields, models
 class StockMove(models.Model):
     _inherit = 'stock.move'
 
+    sale_line_id = fields.Many2one(
+        comodel_name='sale.order.line',
+        string='Sale Order Line',
+    )
     modality_id = fields.Many2one(
         comodel_name='stock.picking.modality',
         string='Modality',
+        related='sale_line_id.modality_id',
+        store=True,
     )
     destiny_id = fields.Many2one(
         comodel_name='stock.picking.destiny',
         string='Destiny',
+        related='sale_line_id.destiny_id',
+        store=True,
     )
     zone_id = fields.Many2one(
         comodel_name='stock.picking.zone',
         string='Zone',
+        related='sale_line_id.zone_id',
+        store=True,
     )
     price = fields.Float(
         string='Precio',

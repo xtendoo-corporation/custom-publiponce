@@ -203,7 +203,6 @@
                 <field name="modality_id" type="col"/>
                 <field name="destiny_id"/>
                 <field name="zone_id"/>
-                <field name="quantity" type="measure"/>
                 <field name="is_delivered" type="col"/>
             </pivot>
         </field>

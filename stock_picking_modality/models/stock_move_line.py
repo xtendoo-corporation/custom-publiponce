@@ -9,12 +9,15 @@ class StockMoveLine(models.Model):
 
     modality_id = fields.Many2one(
         related='move_id.modality_id',
+        store=True,
     )
     destiny_id = fields.Many2one(
         related='move_id.destiny_id',
+        store=True,
     )
     zone_id = fields.Many2one(
         related='move_id.zone_id',
+        store=True,
     )
     price = fields.Float(
         related='move_id.price',
@@ -22,3 +25,6 @@ class StockMoveLine(models.Model):
     total_price = fields.Float(
         related='move_id.total_price',
     )
+
+
+

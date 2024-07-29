@@ -7,6 +7,19 @@ from odoo import api, fields, models, exceptions
 class StockPicking(models.Model):
     _inherit = 'stock.picking'
 
+    # modality_id = fields.Many2one(
+    #     related='stock.move.line',
+    #     string='Modality',
+    # )
+    # destiny_id = fields.Many2one(
+    #     related='stock.move.line',
+    #     string='Destiny',
+    # )
+    # zone_id = fields.Many2one(
+    #     related='stock.move.line',
+    #     string='Zone',
+    # )
+
     # def action_validate(self):
     #     res = super().button_validate()
     #     for line in self.move_ids:
