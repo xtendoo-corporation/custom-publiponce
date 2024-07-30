@@ -8,9 +8,10 @@
                 <xpath
                     expr="/form/sheet/notebook/page[@name='operations']/field[@name='move_ids_without_package']/tree/field[@name='product_id']"
                     position="after">
-                    <field name="modality_id"/>
-                    <field name="destiny_id"/>
-                    <field name="zone_id"/>
+                    <field name="modality_id" string="Modalidad"/>
+                    <field name="destiny_id" string="Destino"/>
+                    <field name="zone_id" string="Zona"/>
+                    <field name="sale_line_id"/>
                 </xpath>
             </field>
         </record>
