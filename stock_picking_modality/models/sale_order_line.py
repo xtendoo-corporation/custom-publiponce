@@ -1,12 +1,18 @@
 # Copyright 2023 Salvador, Abraham (https://xtendoo.es)
 # License AGPL-3.0 or later (http://www.gnu.org/licenses/agpl.html).
+from datetime import timedelta
 
 from odoo import api, fields, models
 
 
 class SaleOrderLine(models.Model):
     _inherit = 'sale.order.line'
+    # _inherit = ['sale.order.line', 'mail.thread', 'mail.activity.mixin']
 
+    name = fields.Char(
+        string='Stock Move Planning',
+        compute='_compute_name'
+    )
     modality_id = fields.Many2one(
         comodel_name='stock.picking.modality',
         string='Modality',
@@ -23,6 +29,83 @@ class SaleOrderLine(models.Model):
         comodel_name='stock.picking.modality.destiny.price',
         string='Precio Tarifa',
     )
+    is_delivered = fields.Boolean(
+        string='Delivered',
+        default=False,
+    )
+    date_scheduled = fields.Date(
+        string='Date Scheduled',
+        required=True,
+        readonly=False,
+    )
+    price = fields.Float(
+        string='Price',
+        compute='_on_change_price',
+    )
+    partner_id = fields.Many2one(
+        comodel_name='res.partner',
+        string='Customer',
+        related='order_id.partner_id',
+    )
+    tag_ids = fields.Many2many(
+        comodel_name='res.partner',
+        readonly=True,
+        string='Cliente',
+    )
+    in_stock = fields.Boolean(
+        string='In Stock',
+        compute='_compute_in_stock',
+        store=True,
+    )
+    color = fields.Integer(
+        string='Color',
+        help='1-Rojo, 2-Naranja, 3-Verde lima, 4-Azul, 5-Morado Oscuro, 6-Rojo anaranjado,'
+                    ' 7-Azul verdoso, 8-Azul oscuro, 9-Burdeos, 10-Verde, 11-Morado Odoo, '
+    )
+    partner_color = fields.Integer(
+        string='Partner Color',
+        compute='_compute_partner_color'
+    )
+
+    @api.depends('product_template_id', 'product_uom_qty')
+    def _compute_name(self):
+        for record in self:
+            record.name = f"{record.product_template_id.name} - {record.product_uom_qty}"
+
+    @api.depends('partner_id')
+    def _compute_partner_color(self):
+        for record in self:
+            record.partner_color = record.partner_id.color if record.partner_id else 0
+
+    @api.depends('product_id', 'product_uom_qty')
+    def _compute_in_stock(self):
+        for record in self:
+            if record.product_template_id:
+                stock_quant = self.env['stock.quant'].search([
+                    ('product_id', '=', record.product_template_id.id),
+                    ('location_id.usage', '=', 'internal')
+                ], limit=1)
+                record.in_stock = stock_quant.quantity >= record.product_uom_qty
+            else:
+                record.in_stock = False
+
+    @api.model
+    def create(self, vals):
+        record = super(SaleOrderLine, self).create(vals)
+        if record.partner_id and record.partner_id not in record.tag_ids:
+            record.tag_ids = [(4, record.partner_id.id)]
+        return record
+
+    @api.onchange('modality_id', 'destiny_id', 'zone_id')
+    def _on_change_price(self):
+        self.price = 0
+        for line in self:
+            modality_price = self.env['stock.picking.modality.destiny.price'].search(
+                [("modality_id", '=', line.modality_id.id), ("destiny_id", '=', line.destiny_id.id),
+                 ("zone_id", '=', line.zone_id.id)], limit=1
+            )
+            if modality_price:
+                line.price = modality_price.price
 
     @api.onchange('zone_id')
     def _onchange_price_fee(self):
@@ -79,3 +162,40 @@ class SaleOrderLine(models.Model):
                 }
             }
 
+    @api.model
+    def mark_as_delivered(self):
+        yesterday = fields.Date.today() - timedelta(days=1)
+        plannings = self.search([
+            ('date_scheduled', '=', yesterday),
+            ('is_delivered', '=', False),
+        ])
+        plannings.write({'is_delivered': True})
+
+    def action_deliver_products(self):
+        for line in self:
+            # Find the related sale order
+            sale_order = line.order_id
+            print(sale_order)
+            if not sale_order:
+                continue
+
+            print("antes de buscar")
+            # Find the last transfer related to the sale order and the selected route
+            last_transfer = self.env['stock.picking'].search([
+                ('sale_id', '=', sale_order.id),
+            ], order='date_done desc', limit=1)
+
+            print(last_transfer)
+            if last_transfer:
+                print("realizar button validate")
+                try:
+                    # Set the quantity_done for each stock move
+                    for move in last_transfer.move_ids_without_package:
+                        move.quantity_done = line.product_uom_qty
+                        print(move.quantity_done)
+                        # Deliver the products
+                    last_transfer.button_validate()
+                    print("realizado")
+                    line.is_delivered = True
+                except Exception as e:
+                    print(f"Error during button_validate: {e}")

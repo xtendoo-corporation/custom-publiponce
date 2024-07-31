@@ -26,6 +26,7 @@
             "views/res_partner_view.xml",
             "views/stock_move_planning_view.xml",
             "views/view_order_form_publiponce.xml",
+            "views/sale_order_line_view.xml",
         ],
     'installable': True,
     'active': False,
