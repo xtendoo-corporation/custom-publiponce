@@ -25,6 +25,21 @@
         <field name="model">sale.order.line</field>
         <field name="arch" type="xml">
             <form string="Sale order line Planning">
+                <header>
+                    <button name="action_receive_products" type="object" string="Recepcionar" class="btn-primary"
+                            attrs="{'invisible': [('state_planning', '!=', 'espera_recepcion')]}"/>
+                    <button name="action_move_to_truck" type="object" string="Mover a furgón" class="btn-primary"
+                            attrs="{'invisible': [('state_planning', '!=', 'en_stock')]}"/>
+                    <button name="action_deliver_products" type="object" string="Entregar al cliente"
+                            class="btn-primary"
+                            attrs="{'invisible': [('state_planning', '!=', 'en_furgon')]}"/>
+                    <button name="action_partial_delivery" type="object" string="Entrega Parcial"
+                            class="btn-primary"
+                            attrs="{'invisible': [('state_planning', '!=', 'en_furgon')]}"/>
+                    <field name="state_planning" widget="statusbar"
+                           statusbar_visible="espera_recepcion,en_stock,en_furgon,repartido"
+                           modifiers="{'readonly': true}"/>
+                </header>
                 <sheet>
                     <group>
                         <field name="product_template_id" string="Producto"/>
@@ -33,15 +48,14 @@
                         <field name="destiny_id"/>
                         <field name="zone_id"/>
                         <field name="date_scheduled"/>
-                        <field name="is_delivered"/>
+                        <field name="is_delivered" readonly="1"/>
                         <field name="product_uom_qty"/>
                         <field name="price" string="Coste"/>
                         <field name="price_subtotal"/>
                         <field name="tag_ids" widget="many2many_tags"
                                options="{'color_field': 'color','no_create': True}, 'no_create_edit': True}"/>
-                         <button name="action_deliver_products" type="object" string="Deliver" class="btn-primary"/>
-                    </group>
 
+                    </group>
                 </sheet>
                 <!--                <div class="oe_chatter">-->
                 <!--                    <field-->
@@ -103,7 +117,7 @@
                 <field name="date_scheduled"/>
                 <field name="is_delivered"/>
                 <field name="product_uom_qty"/>
-
+                <field name="state_planning"/>
                 <field name="color"/>
                 <field name="partner_color"/>
                 <field name="in_stock"/>
@@ -159,6 +173,12 @@
                                         <field name="tag_ids" widget="many2many_tags"
                                                options="{'color_field': 'color'}"/>
                                     </div>
+                                     <div class="col-12">
+                                         <span class="badge rounded-pill bg-info"
+                                                  style="font-size: 1.05em; margin-bottom: 2px; color: white">
+                                                <t t-esc="record.state_planning.value"/>
+                                            </span>
+                                     </div>
                                 </div>
                             </div>
                         </div>
@@ -196,7 +216,7 @@
         </field>
     </record>
 
-     <record id="action_deliver_products" model="ir.actions.server">
+    <record id="action_deliver_products" model="ir.actions.server">
         <field name="name">Deliver Products</field>
         <field name="model_id" ref="model_sale_order_line"/>
         <field name="state">code</field>

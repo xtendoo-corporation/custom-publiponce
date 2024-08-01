@@ -66,6 +66,12 @@ class SaleOrderLine(models.Model):
         string='Partner Color',
         compute='_compute_partner_color'
     )
+    state_planning = fields.Selection([
+        ('espera_recepcion', 'Espera recepción'),
+        ('en_stock', 'En stock'),
+        ('en_furgon', 'En furgón'),
+        ('repartido', 'Repartido')
+    ], string='State Planning', readonly=True, default='espera_recepcion')
 
     @api.depends('product_template_id', 'product_uom_qty')
     def _compute_name(self):
@@ -173,14 +179,12 @@ class SaleOrderLine(models.Model):
 
     def action_deliver_products(self):
         for line in self:
-            # Find the related sale order
             sale_order = line.order_id
             print(sale_order)
             if not sale_order:
                 continue
 
             print("antes de buscar")
-            # Find the last transfer related to the sale order and the selected route
             last_transfer = self.env['stock.picking'].search([
                 ('sale_id', '=', sale_order.id),
             ], order='date_done desc', limit=1)
@@ -189,13 +193,70 @@ class SaleOrderLine(models.Model):
             if last_transfer:
                 print("realizar button validate")
                 try:
-                    # Set the quantity_done for each stock move
                     for move in last_transfer.move_ids_without_package:
                         move.quantity_done = line.product_uom_qty
                         print(move.quantity_done)
-                        # Deliver the products
                     last_transfer.button_validate()
                     print("realizado")
                     line.is_delivered = True
+                    line.state_planning = 'repartido'
                 except Exception as e:
                     print(f"Error during button_validate: {e}")
+
+    def action_receive_products(self):
+        for line in self:
+            purchase_order = self.env['purchase.order'].search([
+                ('origin', '=', line.order_id.name),
+            ], limit=1)
+
+            print(purchase_order)
+            if not purchase_order:
+                continue
+            if purchase_order.state == 'draft':
+                purchase_order.button_confirm()
+                print("button_confirm")
+            print("antes de buscar")
+            last_receipt = self.env['stock.picking'].search([
+                ('purchase_id', '=', purchase_order.id),
+                ('state', 'in', ['assigned', 'waiting']),
+            ], order='date_done desc', limit=1)
+
+            print(last_receipt)
+
+            if last_receipt:
+                    print("realizar button validate")
+                    for move in last_receipt.move_ids_without_package:
+                        move.quantity_done = line.product_uom_qty
+                    last_receipt.button_validate()
+                    line.state_planning = 'en_stock'
+
+    def action_move_to_truck(self):
+        for line in self:
+            transfer = self.env['stock.picking'].search([
+                ('sale_id', '=', line.order_id.id),
+                ('state', '=', 'assigned'),
+            ], limit=1)
+            print(f"Transfer ID: {transfer.id}")
+            print(f"Transfer Name: {transfer.name}")
+            print(f"Transfer State: {transfer.state}")
+            print(f"Transfer Origin: {transfer.origin}")
+            print(f"Transfer Partner: {transfer.partner_id.name}")
+            if transfer:
+                for move in transfer.move_ids_without_package:
+                    move.quantity_done = line.product_uom_qty
+                    print(f"Move ID: {move.id}, Quantity Done: {move.quantity_done}")
+
+                transfer.button_validate()
+                line.state_planning = 'en_furgon'
+
+    def action_partial_delivery(self):
+        return {
+            'type': 'ir.actions.act_window',
+            'name': 'Partial Delivery',
+            'res_model': 'partial.delivery.wizard',
+            'view_mode': 'form',
+            'target': 'new',
+            'context': {
+                'default_sale_order_line_id': self.id,
+            },
+        }
