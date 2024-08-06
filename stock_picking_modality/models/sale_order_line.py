@@ -60,7 +60,7 @@ class SaleOrderLine(models.Model):
     color = fields.Integer(
         string='Color',
         help='1-Rojo, 2-Naranja, 3-Verde lima, 4-Azul, 5-Morado Oscuro, 6-Rojo anaranjado,'
-                    ' 7-Azul verdoso, 8-Azul oscuro, 9-Burdeos, 10-Verde, 11-Morado Odoo, '
+             ' 7-Azul verdoso, 8-Azul oscuro, 9-Burdeos, 10-Verde, 11-Morado Odoo, '
     )
     partner_color = fields.Integer(
         string='Partner Color',
@@ -71,7 +71,10 @@ class SaleOrderLine(models.Model):
         ('en_stock', 'En stock'),
         ('en_furgon', 'En furgón'),
         ('repartido', 'Repartido')
-    ], string='State Planning', readonly=True, default='espera_recepcion')
+    ], string='State Planning',
+        readonly=True,
+        default='espera_recepcion',
+        compute='_compute_state_planning')
 
     @api.depends('product_template_id', 'product_uom_qty')
     def _compute_name(self):
@@ -224,11 +227,11 @@ class SaleOrderLine(models.Model):
             print(last_receipt)
 
             if last_receipt:
-                    print("realizar button validate")
-                    for move in last_receipt.move_ids_without_package:
-                        move.quantity_done = line.product_uom_qty
-                    last_receipt.button_validate()
-                    line.state_planning = 'en_stock'
+                print("realizar button validate")
+                for move in last_receipt.move_ids_without_package:
+                    move.quantity_done = line.product_uom_qty
+                last_receipt.button_validate()
+                line.state_planning = 'en_stock'
 
     def action_move_to_truck(self):
         for line in self:
@@ -260,3 +263,53 @@ class SaleOrderLine(models.Model):
                 'default_sale_order_line_id': self.id,
             },
         }
+
+    @api.depends('move_ids.move_line_ids.qty_done')
+    def _compute_state_planning(self):
+        for line in self:
+            stock_moves = line.move_ids
+            print(
+                f"Sale Order Line ID: {line.id}, Product: {line.product_id.name}, Quantity Ordered: {line.product_uom_qty}")
+            state_updated = False
+            for move in stock_moves:
+                print(f"  Stock Move ID: {move.id}, Product: {move.product_id.name}, Quantity: {move.product_uom_qty}")
+                for move_line in move.move_line_ids:
+                    print(
+                        f"    Stock Move Line ID: {move_line.id}, Product: {move_line.product_id.name}, Quantity Done: {move_line.qty_done}, Location: {move_line.location_id.name}")
+                    print(f"    move_line.location_dest_id.name: {move_line.location_dest_id.name}")
+                    print(f"    move_line.location_dest_id.usage: {move_line.location_dest_id.usage}")
+                    print(f"    move_line.qty_done: {move_line.qty_done}")
+                    print(f"    line.product_uom_qty: {line.product_uom_qty}")
+
+                    if move_line.location_dest_id.usage == 'customer' and move_line.qty_done == line.product_uom_qty:
+                        print(
+                            "    Condition met: move_line.location_dest_id.name == 'customer' and move_line.qty_done == line.product_uom_qty")
+                        line.state_planning = 'repartido'
+                        line.is_delivered = True
+                        state_updated = True
+                    elif move_line.location_dest_id.usage == 'transit' and move_line.qty_done == line.product_uom_qty:
+                        print(
+                            "    Condition met: move_line.location_dest_id.usage == 'transit' and move_line.qty_done == line.product_uom_qty")
+                        line.state_planning = 'en_furgon'
+                        state_updated = True
+                    elif move_line.location_dest_id.usage == 'internal' and move_line.qty_done == line.product_uom_qty:
+                        print(
+                            "    Condition met: move_line.location_dest_id.name == 'internal' and move_line.qty_done == line.product_uom_qty")
+                        line.state_planning = 'en_stock'
+                        state_updated = True
+                    print(f"    Updated State Planning: {line.state_planning}")
+                    if state_updated:
+                        break
+                if state_updated:
+                    break
+            if not state_updated:
+                line.state_planning = 'espera_recepcion'
+                print(f"    No conditions met, setting State Planning to: {line.state_planning}")
+
+    def show_related_stock_move_lines(self):
+        for line in self:
+            stock_moves = line.move_ids
+            for move in stock_moves:
+                for move_line in move.move_line_ids:
+                    print(
+                        f"Stock Move Line ID: {move_line.id}, Product: {move_line.product_id.name}, Quantity Done: {move_line.qty_done}, Location: {move_line.location_id.name}")

@@ -6,6 +6,10 @@
             <form string="Partial Delivery">
                 <group>
                     <field name="cantidad_entregada"/>
+                    <field name="route_id"/>
+                    <field name="modality_id"/>
+                    <field name="destiny_id"/>
+                    <field name="zone_id"/>
                 </group>
                 <footer>
                     <button string="Confirm" type="object" name="action_confirm_partial_delivery" class="btn-primary"/>

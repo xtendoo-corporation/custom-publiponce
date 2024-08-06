@@ -12,6 +12,7 @@
             "stock",
             "contacts",
             "sale",
+            "purchase",
         ],
     "data":
         [

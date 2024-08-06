@@ -7,6 +7,20 @@ from odoo import api, fields, models, exceptions
 class StockPicking(models.Model):
     _inherit = 'stock.picking'
 
+    @api.model
+    def create(self, vals):
+        res = super(StockPicking, self).create(vals)
+        if 'sale_id' in vals:
+            sale_order = self.env['sale.order'].browse(vals['sale_id'])
+            sale_order.update_stock_transfers_with_order_line()
+        return res
+
+    def write(self, vals):
+        res = super(StockPicking, self).write(vals)
+        if 'state' in vals and vals['state'] == 'done' and self.sale_id:
+            self.sale_id.update_stock_transfers_with_order_line()
+        return res
+
     # modality_id = fields.Many2one(
     #     related='stock.move.line',
     #     string='Modality',

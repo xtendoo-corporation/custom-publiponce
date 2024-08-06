@@ -97,5 +97,18 @@ class SaleOrder(models.Model):
         self.ensure_one()
         action = self.env.ref('stock_picking_modality.action_sale_order_line_planning').read()[0]
         action['domain'] = [('order_id', '=', self.id)]
-        # action['domain'] = [('product_id', 'in', self.order_line.mapped('product_id').ids)]
         return action
+
+    def update_stock_transfers_with_order_line(self):
+        for line in self.order_line:
+            transfers = self.env['stock.picking'].search([
+                ('sale_id', '=', self.id)
+            ])
+            for transfer in transfers:
+                for move in transfer.move_ids_without_package:
+                    move.write({'sale_line_id': line.id})
+
+    def action_confirm(self):
+        res = super(SaleOrder, self).action_confirm()
+        self.update_stock_transfers_with_order_line()
+        return res

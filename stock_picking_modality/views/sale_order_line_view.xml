@@ -36,6 +36,8 @@
                     <button name="action_partial_delivery" type="object" string="Entrega Parcial"
                             class="btn-primary"
                             attrs="{'invisible': [('state_planning', '!=', 'en_furgon')]}"/>
+                    <button name="show_related_stock_move_lines" type="object" string="Mostrar Stock Move Lines"
+                            class="btn-secondary"/>
                     <field name="state_planning" widget="statusbar"
                            statusbar_visible="espera_recepcion,en_stock,en_furgon,repartido"
                            modifiers="{'readonly': true}"/>
@@ -121,7 +123,6 @@
                 <field name="color"/>
                 <field name="partner_color"/>
                 <field name="in_stock"/>
-
                 <templates>
                     <t t-name="kanban-box">
                         <div t-attf-class="#{kanban_color(record.partner_color.raw_value)} oe_kanban_global_click">
@@ -130,7 +131,7 @@
                                     <strong>
                                         <t t-esc="record.product_template_id.value"/>
                                     </strong>
-                                    <t t-if="record.in_stock.raw_value">
+                                    <t t-if="record.state_planning.raw_value != 'espera_recepcion'">
                                         <strong
                                             t-attf-style="text-align: right;">
                                             <t t-esc="record.product_uom_qty.value"/>
@@ -140,7 +141,7 @@
                                             </t>
                                         </strong>
                                     </t>
-                                    <t t-if="!record.in_stock.raw_value">
+                                    <t t-if="record.state_planning.raw_value == 'espera_recepcion'">
                                         <strong
                                             t-attf-style="text-align: right; color: red">
                                             <t t-esc="record.product_uom_qty.value"/>
@@ -173,12 +174,12 @@
                                         <field name="tag_ids" widget="many2many_tags"
                                                options="{'color_field': 'color'}"/>
                                     </div>
-                                     <div class="col-12">
-                                         <span class="badge rounded-pill bg-info"
-                                                  style="font-size: 1.05em; margin-bottom: 2px; color: white">
-                                                <t t-esc="record.state_planning.value"/>
-                                            </span>
-                                     </div>
+                                    <div class="col-12">
+                                        <span class="badge rounded-pill bg-info"
+                                              style="font-size: 1.05em; margin-bottom: 2px; color: white">
+                                            <t t-esc="record.state_planning.value"/>
+                                        </span>
+                                    </div>
                                 </div>
                             </div>
                         </div>
