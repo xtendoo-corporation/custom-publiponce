@@ -267,44 +267,24 @@ class SaleOrderLine(models.Model):
     @api.depends('move_ids.move_line_ids.qty_done')
     def _compute_state_planning(self):
         for line in self:
-            stock_moves = line.move_ids
+            line.state_planning = 'espera_recepcion'
             print(
                 f"Sale Order Line ID: {line.id}, Product: {line.product_id.name}, Quantity Ordered: {line.product_uom_qty}")
             state_updated = False
-            for move in stock_moves:
+            for move in line.move_ids:
                 print(f"  Stock Move ID: {move.id}, Product: {move.product_id.name}, Quantity: {move.product_uom_qty}")
-                for move_line in move.move_line_ids:
-                    print(
-                        f"    Stock Move Line ID: {move_line.id}, Product: {move_line.product_id.name}, Quantity Done: {move_line.qty_done}, Location: {move_line.location_id.name}")
-                    print(f"    move_line.location_dest_id.name: {move_line.location_dest_id.name}")
-                    print(f"    move_line.location_dest_id.usage: {move_line.location_dest_id.usage}")
-                    print(f"    move_line.qty_done: {move_line.qty_done}")
-                    print(f"    line.product_uom_qty: {line.product_uom_qty}")
 
-                    if move_line.location_dest_id.usage == 'customer' and move_line.qty_done == line.product_uom_qty:
-                        print(
-                            "    Condition met: move_line.location_dest_id.name == 'customer' and move_line.qty_done == line.product_uom_qty")
-                        line.state_planning = 'repartido'
-                        line.is_delivered = True
-                        state_updated = True
-                    elif move_line.location_dest_id.usage == 'transit' and move_line.qty_done == line.product_uom_qty:
-                        print(
-                            "    Condition met: move_line.location_dest_id.usage == 'transit' and move_line.qty_done == line.product_uom_qty")
-                        line.state_planning = 'en_furgon'
-                        state_updated = True
-                    elif move_line.location_dest_id.usage == 'internal' and move_line.qty_done == line.product_uom_qty:
-                        print(
-                            "    Condition met: move_line.location_dest_id.name == 'internal' and move_line.qty_done == line.product_uom_qty")
-                        line.state_planning = 'en_stock'
-                        state_updated = True
-                    print(f"    Updated State Planning: {line.state_planning}")
-                    if state_updated:
-                        break
-                if state_updated:
+                if any(move.move_line_ids.filtered(lambda x: x.qty_done == line.product_uom_qty).location_dest_id.usage == 'customer'):
+                    line.state_planning = 'repartido'
                     break
-            if not state_updated:
-                line.state_planning = 'espera_recepcion'
-                print(f"    No conditions met, setting State Planning to: {line.state_planning}")
+
+                if any(move.move_line_ids.filtered(lambda x: x.qty_done == line.product_uom_qty).location_dest_id.usage == 'transit'):
+                    line.state_planning = 'en_furgon'
+                    break
+
+                if any(move.move_line_ids.filtered(lambda x: x.qty_done == line.product_uom_qty).location_dest_id.usage == 'internal'):
+                    line.state_planning = 'en_stock'
+                    break
 
     def show_related_stock_move_lines(self):
         for line in self:
