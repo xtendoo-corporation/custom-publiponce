@@ -137,7 +137,7 @@
                                             <t t-esc="record.product_uom_qty.value"/>
                                             <t t-if="record.is_delivered.raw_value">
                                                 <span></span>
-                                                <i class="fa fa-truck"/>
+                                                <i class="fa fa-truck" title="Entregado"/>
                                             </t>
                                         </strong>
                                     </t>
@@ -147,7 +147,7 @@
                                             <t t-esc="record.product_uom_qty.value"/>
                                             <t t-if="record.is_delivered.raw_value">
                                                 <span></span>
-                                                <i class="fa fa-truck"/>
+                                                <i class="fa fa-truck" title="Entregado"/>
                                             </t>
                                         </strong>
                                     </t>
