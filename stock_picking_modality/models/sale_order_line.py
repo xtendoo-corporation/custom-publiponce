@@ -270,21 +270,44 @@ class SaleOrderLine(models.Model):
             line.state_planning = 'espera_recepcion'
             print(
                 f"Sale Order Line ID: {line.id}, Product: {line.product_id.name}, Quantity Ordered: {line.product_uom_qty}")
-            state_updated = False
+
+            purchase_picking = self.env['stock.picking'].search([
+                ('sale_id', '=', line.order_id.id),
+                ('picking_type_id.code', '=', 'incoming'),
+                ('state', '=', 'done'),
+                ('move_line_ids.location_dest_id.usage', '=', 'internal')
+            ], limit=1)
+
+            if purchase_picking:
+                line.state_planning = 'en_stock'
+                print(f" Salir del estado en stock")
+
             for move in line.move_ids:
-                print(f"  Stock Move ID: {move.id}, Product: {move.product_id.name}, Quantity: {move.product_uom_qty}")
+                print(f"  Stock Move ID: {move.id}, Product: {move.product_id.name}, Quantity: {move.product_uom_qty},"
+                      f"location_dest_id.usage: {move.location_dest_id.usage}")
 
-                if any(move.move_line_ids.filtered(lambda x: x.qty_done == line.product_uom_qty).location_dest_id.usage == 'customer'):
+                customer_moves = move.move_line_ids.filtered(
+                    lambda x: x.qty_done == line.product_uom_qty and x.location_dest_id.usage == 'customer')
+                if customer_moves:
                     line.state_planning = 'repartido'
+                    line.is_delivered = True
                     break
 
-                if any(move.move_line_ids.filtered(lambda x: x.qty_done == line.product_uom_qty).location_dest_id.usage == 'transit'):
+                transit_moves = move.move_line_ids.filtered(
+                    lambda x: x.qty_done == line.product_uom_qty and x.location_dest_id.usage == 'transit')
+                if transit_moves:
                     line.state_planning = 'en_furgon'
+                    print(f" Salir del estado en furgon")
                     break
 
-                if any(move.move_line_ids.filtered(lambda x: x.qty_done == line.product_uom_qty).location_dest_id.usage == 'internal'):
-                    line.state_planning = 'en_stock'
-                    break
+
+
+
+                # internal_moves = move.move_line_ids.filtered(
+                #     lambda x: x.qty_done == line.product_uom_qty and x.location_dest_id.usage == 'internal')
+                # if internal_moves:
+                #     line.state_planning = 'en_stock'
+                #     break
 
     def show_related_stock_move_lines(self):
         for line in self:

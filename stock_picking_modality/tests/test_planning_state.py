@@ -16,17 +16,12 @@ class TestPlanning(TransactionCase):
             {"name": "Test warehouse", "code": "TWH"}
         )
 
-    def _create_internal_location(self, warehouse):
-        return self.env["stock.location"].create(
-            {"name": "Internal location", "usage": "internal", "location_id": warehouse.view_location_id.id}
-        )
-
     def _create_transit_location(self, warehouse):
         return self.env["stock.location"].create(
             {"name": "Transit location", "usage": "transit", "location_id": warehouse.view_location_id.id}
         )
 
-    def _create_route(self, internal_location, transit_location, stock_picking_transit_type,
+    def _create_route(self, transit_location, stock_picking_transit_type,
                       stock_picking_customers_type):
         if not self.env['ir.model'].search([('model', '=', 'stock.route')]):
             raise ValueError(
@@ -39,23 +34,21 @@ class TestPlanning(TransactionCase):
         self.env["stock.rule"].create({
             "name": "Buy",
             "location_src_id": self.env.ref('stock.stock_location_suppliers').id,
-            "location_dest_id": internal_location.id,
+            "location_dest_id": self.env.ref('stock.stock_location_stock').id,
             "picking_type_id": self.env.ref('stock.picking_type_in').id,
             "route_id": route.id,
             "action": "buy",
             "procure_method": "make_to_order",
-            "warehouse_id": stock_picking_transit_type.warehouse_id.id,
         })
 
         self.env["stock.rule"].create({
             "name": "Internal to Transit",
-            "location_src_id": internal_location.id,
+            "location_src_id": self.env.ref('stock.stock_location_stock').id,
             "location_dest_id": transit_location.id,
             "picking_type_id": stock_picking_transit_type.id,
             "route_id": route.id,
             "action": "pull_push",
             "procure_method": "mts_else_mto",
-            "warehouse_id": stock_picking_transit_type.warehouse_id.id,
         })
 
         self.env["stock.rule"].create({
@@ -66,14 +59,13 @@ class TestPlanning(TransactionCase):
             "route_id": route.id,
             "action": "pull_push",
             "procure_method": "mts_else_mto",
-            "warehouse_id": stock_picking_customers_type.warehouse_id.id,
         })
 
         return route
 
-    def _create_stock_picking_transit_type(self, internal_location, transit_location):
+    def _create_stock_picking_transit_type(self, transit_location):
         return self.env["stock.picking.type"].create(
-            {"name": "Test picking type transit", "default_location_src_id": internal_location.id,
+            {"name": "Test picking type transit", "default_location_src_id": self.env.ref('stock.stock_location_stock').id,
              "default_location_dest_id": transit_location.id, "sequence_code": "TST",
              "reservation_method": "at_confirm", "company_id": self.env.company.id,
              "code": "internal", "create_backorder": "always", "show_operations": False}
@@ -89,20 +81,6 @@ class TestPlanning(TransactionCase):
              }
         )
 
-    def _create_stock_rule(self, name, location_src, location_dest, picking_type):
-        return self.env["stock.rule"].create({
-            "name": name,
-            "location_id": location_src.id,
-            "location_src_id": location_src.id,
-            "location_dest_id": location_dest.id,
-            "picking_type_id": picking_type.id,
-            "action": "pull_push",
-            "procure_method": "make_to_order",
-            "supply_method": "mts_else_mto",
-            "move_type": "direct",
-            "warehouse_id": picking_type.warehouse_id.id,
-        })
-
     def _create_order(self, customer, product):
         return self.env["sale.order"].create(
             {"partner_id": customer.id, "order_line": [(0, 0, {"product_id": product.id})]}
@@ -110,8 +88,8 @@ class TestPlanning(TransactionCase):
 
     def _create_product(self, customer, route):
         product = self.env["product.product"].create(
-            {"name": "Test product", "type": "consu", "seller_ids": [(0, 0, {"partner_id": customer.id})],
-             "detailed_type": "consu", "purchase_ok": True}
+            {"name": "Test product", "type": "product", "seller_ids": [(0, 0, {"partner_id": customer.id})],
+             "detailed_type": "product", "purchase_ok": True}
         )
         product.write({'route_ids': [(4, route.id)]})
         print(f"Product created: {product.name} (ID: {product.id}) with route: {route.name} (ID: {route.id})")
@@ -144,7 +122,7 @@ class TestPlanning(TransactionCase):
 
     def _create_order_with_line(self, customer, product, route, modality, destiny, zone, quantity, fee):
 
-        product.write({'route_ids': [(4, route.id)]})
+        # product.write({'route_ids': [(4, route.id)]})
 
         return self.env['sale.order'].create({
             'partner_id': customer.id,
@@ -165,23 +143,15 @@ class TestPlanning(TransactionCase):
         ], limit=1)
         print(f"Purchase order created: {purchase_order.name} (ID: {purchase_order.id})")
 
-        # Check product and warehouse configurations
-        for line in purchase_order.order_line:
-            product = line.product_id
-            print(f"Product: {product.name} (ID: {product.id})")
-            for route in product.route_ids:
-                print(f"Route: {route.name} (ID: {route.id})")
-                for rule in route.rule_ids:
-                    print(f"Rule: {rule.name} (ID: {rule.id})")
-                    print(f"  Location Source: {rule.location_src_id.name} (ID: {rule.location_src_id.id})")
-                    print(f"  Location Destination: {rule.location_dest_id.name} (ID: {rule.location_dest_id.id})")
-                    print(f"  Picking Type: {rule.picking_type_id.name} (ID: {rule.picking_type_id.id})")
-
         purchase_order.button_confirm()
         print(f"Purchase order confirmed: {purchase_order.name} (ID: {purchase_order.id})")
 
         picking = purchase_order.picking_ids
         print(f"Picking created: {picking.name} (ID: {picking.id})")
+
+        # Link the picking to the sale order
+        picking.write({'sale_id': order.id})
+
         picking.action_confirm()
         print(f"Picking confirmed: {picking.name} (ID: {picking.id})")
         picking.action_assign()
@@ -225,13 +195,10 @@ class TestPlanning(TransactionCase):
         warehouse = self._create_warehouse()
         print(f"Warehouse created: {warehouse.name} (ID: {warehouse.id})")
 
-        internal_location = self._create_internal_location(warehouse)
-        print(f"Internal location created: {internal_location.name} (ID: {internal_location.id})")
-
         transit_location = self._create_transit_location(warehouse)
         print(f"Transit location created: {transit_location.name} (ID: {transit_location.id})")
 
-        stock_picking_transit_type = self._create_stock_picking_transit_type(internal_location, transit_location)
+        stock_picking_transit_type = self._create_stock_picking_transit_type(transit_location)
         print(
             f"Stock picking transit type created: {stock_picking_transit_type.name} (ID: {stock_picking_transit_type.id})")
 
@@ -239,7 +206,7 @@ class TestPlanning(TransactionCase):
         print(
             f"Stock picking customers type created: {stock_picking_customers_type.name} (ID: {stock_picking_customers_type.id})")
 
-        route = self._create_route(internal_location, transit_location, stock_picking_transit_type,
+        route = self._create_route(transit_location, stock_picking_transit_type,
                                    stock_picking_customers_type)
         print(f"Route created: {route.name} (ID: {route.id})")
 
@@ -255,8 +222,81 @@ class TestPlanning(TransactionCase):
         zone = self._create_stock_picking_zone('Test zone', destiny)
         print(f"Zone created: {zone.name} (ID: {zone.id})")
 
-        destiny.write({'zone_id': [(4, zone.id)]})
-        print(f"Zone {zone.name} (ID: {zone.id}) added to Destiny {destiny.name} (ID: {destiny.id})")
+        fee = self._create_stock_picking_modality_destiny_price(modality, destiny, zone, 10)
+        print(f"Fee created: {fee.name} (ID: {fee.id}) - Price: {fee.price}")
+
+        order = self._create_order_with_line(customer, product, route, modality, destiny, zone, 33, fee)
+        print(f"Order created: {order.name} (ID: {order.id})")
+
+        order.action_confirm()
+        print(f"Order confirmed: {order.name} (ID: {order.id})")
+
+        for line in order.order_line:
+            self.assertEqual(line.state_planning, "espera_recepcion")
+            print(f"Sale Order Line ID: {line.id} is in 'espera_recepcion' state as expected.")
+
+        self._confirm_purchase_order(order)
+        print(f"Purchase order created and confirmed for order: {order.name} (ID: {order.id})")
+
+        for line in order.order_line:
+            self.assertEqual(line.state_planning, "en_stock")
+            print(f"Sale Order Line ID: {line.id} is in 'en_stock' state as expected.")
+
+        self._confirm_assigned_picking(order)
+        print(f"First assigned picking confirmed for order: {order.name} (ID: {order.id})")
+
+        for line in order.order_line:
+            self.assertEqual(line.state_planning, "en_furgon")
+            print(f"Sale Order Line ID: {line.id} is in 'en_furgon' state as expected.")
+
+        self._confirm_assigned_picking(order)
+        print(f"Second assigned picking confirmed for order: {order.name} (ID: {order.id})")
+
+        for line in order.order_line:
+            self.assertEqual(line.state_planning, "repartido")
+            print(f"Sale Order Line ID: {line.id} is in 'repartido' state as expected.")
+
+        pickings = self.env['stock.picking'].search([('origin', '=', order.name)])
+        print(f"All pickings related to order {order.name}: {[picking.id for picking in pickings]}")
+        for picking in pickings:
+            print(f"Picking ID: {picking.id}")
+            print(f"Picking Name: {picking.name}")
+            print(f"Picking State: {picking.state}")
+            print(f"Picking Origin: {picking.origin}")
+            print(f"Picking Partner: {picking.partner_id.name}")
+
+    def test_partial_delivery_to_customer(self):
+        customer = self._create_customer()
+        print(f"Customer created: {customer.name} (ID: {customer.id})")
+
+        warehouse = self._create_warehouse()
+        print(f"Warehouse created: {warehouse.name} (ID: {warehouse.id})")
+
+        transit_location = self._create_transit_location(warehouse)
+        print(f"Transit location created: {transit_location.name} (ID: {transit_location.id})")
+
+        stock_picking_transit_type = self._create_stock_picking_transit_type(transit_location)
+        print(
+            f"Stock picking transit type created: {stock_picking_transit_type.name} (ID: {stock_picking_transit_type.id})")
+
+        stock_picking_customers_type = self._create_stock_picking_customers_type(transit_location)
+        print(
+            f"Stock picking customers type created: {stock_picking_customers_type.name} (ID: {stock_picking_customers_type.id})")
+
+        route = self._create_route(transit_location, stock_picking_transit_type, stock_picking_customers_type)
+        print(f"Route created: {route.name} (ID: {route.id})")
+
+        product = self._create_product(customer, route)
+        print(f"Product created: {product.name} (ID: {product.id})")
+
+        modality = self._create_stock_picking_modality('Test modality', 1)
+        print(f"Modality created: {modality.name} (ID: {modality.id})")
+
+        destiny = self._create_stock_picking_destiny('Test destiny')
+        print(f"Destiny created: {destiny.name} (ID: {destiny.id})")
+
+        zone = self._create_stock_picking_zone('Test zone', destiny)
+        print(f"Zone created: {zone.name} (ID: {zone.id})")
 
         fee = self._create_stock_picking_modality_destiny_price(modality, destiny, zone, 10)
         print(f"Fee created: {fee.name} (ID: {fee.id}) - Price: {fee.price}")
@@ -267,14 +307,31 @@ class TestPlanning(TransactionCase):
         order.action_confirm()
         print(f"Order confirmed: {order.name} (ID: {order.id})")
 
+        for line in order.order_line:
+            assert line.state_planning == 'espera_recepcion', f"Expected 'espera_recepcion', got {line.state_planning}"
+            print(f"Sale Order Line ID: {line.id} is in 'espera_recepcion' state as expected.")
+
         self._confirm_purchase_order(order)
         print(f"Purchase order created and confirmed for order: {order.name} (ID: {order.id})")
+
+        for line in order.order_line:
+            assert line.state_planning == 'en_stock', f"Expected 'en_stock', got {line.state_planning}"
+            print(f"Sale Order Line ID: {line.id} is in 'en_stock' state as expected.")
 
         self._confirm_assigned_picking(order)
         print(f"First assigned picking confirmed for order: {order.name} (ID: {order.id})")
 
-        self._confirm_assigned_picking(order)
-        print(f"Second assigned picking confirmed for order: {order.name} (ID: {order.id})")
+        for line in order.order_line:
+            assert line.state_planning == 'en_furgon', f"Expected 'en_furgon', got {line.state_planning}"
+            print(f"Sale Order Line ID: {line.id} is in 'en_furgon' state as expected.")
 
-
+        wizard = self.env['partial.delivery.wizard'].create({
+            'cantidad_entregada': 16.5,  # Half of the quantity
+            'sale_order_line_id': order.order_line.id,
+            'route_id': route.id,
+            'modality_id': modality.id,
+            'destiny_id': destiny.id,
+            'zone_id': zone.id,
+        })
+        wizard.action_confirm_partial_delivery()
 
