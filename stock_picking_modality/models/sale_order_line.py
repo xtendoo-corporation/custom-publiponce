@@ -68,12 +68,12 @@ class SaleOrderLine(models.Model):
     )
     state_planning = fields.Selection([
         ('espera_recepcion', 'Espera recepción'),
+        ('en_stock_parcial', 'En stock parcialmente'),
         ('en_stock', 'En stock'),
         ('en_furgon', 'En furgón'),
         ('repartido', 'Repartido')
     ], string='State Planning',
         readonly=True,
-        default='espera_recepcion',
         compute='_compute_state_planning')
 
     @api.depends('product_template_id', 'product_uom_qty')
@@ -267,6 +267,7 @@ class SaleOrderLine(models.Model):
     @api.depends('move_ids.move_line_ids.qty_done')
     def _compute_state_planning(self):
         for line in self:
+            print("*" * 100, "Entramos en la linea")
             line.state_planning = 'espera_recepcion'
             print(
                 f"Sale Order Line ID: {line.id}, Product: {line.product_id.name}, Quantity Ordered: {line.product_uom_qty}")
@@ -279,8 +280,20 @@ class SaleOrderLine(models.Model):
             ], limit=1)
 
             if purchase_picking:
-                line.state_planning = 'en_stock'
-                print(f" Salir del estado en stock")
+                stock_location_id = self.env.ref('stock.stock_location_stock').id
+                stock_quant = self.env['stock.quant'].search([
+                    ('product_id', '=', line.product_id.id),
+                    ('location_id', '=', stock_location_id)
+                ], limit=1)
+                if stock_quant:
+                    reserved_quantity = stock_quant.reserved_quantity
+                    print(f"Reserved Stock Quantity: {reserved_quantity}")
+                    if reserved_quantity >= line.product_uom_qty:
+                        line.state_planning = 'en_stock'
+                        print(f" Salir del estado en stock")
+                    elif 0 < reserved_quantity < line.product_uom_qty:
+                        line.state_planning = 'en_stock_parcial'
+                        print(f" Salir del estado en stock parcialmente")
 
             for move in line.move_ids:
                 print(f"  Stock Move ID: {move.id}, Product: {move.product_id.name}, Quantity: {move.product_uom_qty},"
@@ -291,17 +304,35 @@ class SaleOrderLine(models.Model):
                 if customer_moves:
                     line.state_planning = 'repartido'
                     line.is_delivered = True
+                    print(f" Salir del estado repartido")
                     break
 
                 transit_moves = move.move_line_ids.filtered(
-                    lambda x: x.qty_done == line.product_uom_qty and x.location_dest_id.usage == 'transit')
+                    lambda x: x.location_dest_id.usage == 'transit')
                 if transit_moves:
-                    line.state_planning = 'en_furgon'
-                    print(f" Salir del estado en furgon")
+                    if any(x.qty_done == line.product_uom_qty for x in transit_moves):
+                        line.state_planning = 'en_furgon'
+                        print(f" Salir del estado en furgon")
+                        break
+                    elif purchase_picking:
+                        stock_location_id = self.env.ref('stock.stock_location_stock').id
+                        stock_quant = self.env['stock.quant'].search([
+                            ('product_id', '=', line.product_id.id),
+                            ('location_id', '=', stock_location_id)
+                        ], limit=1)
+                        if stock_quant:
+                            reserved_quantity = stock_quant.reserved_quantity
+                            print(f"Reserved Stock Quantity: {reserved_quantity}")
+                            if reserved_quantity >= line.product_uom_qty:
+                                line.state_planning = 'en_stock'
+                                print(f" Salir del estado en stock")
+                            elif 0 < reserved_quantity < line.product_uom_qty:
+                                line.state_planning = 'en_stock_parcial'
+                                print(f" Salir del estado en stock parcialmente")
+                    if not purchase_picking:
+                        line.state_planning = 'en_stock'
+                        print(f" Salir del estado en stock")
                     break
-
-
-
 
                 # internal_moves = move.move_line_ids.filtered(
                 #     lambda x: x.qty_done == line.product_uom_qty and x.location_dest_id.usage == 'internal')

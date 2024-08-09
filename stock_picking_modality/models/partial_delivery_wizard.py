@@ -101,20 +101,26 @@ class PartialDeliveryWizard(models.TransientModel):
 
             new_sale_order.action_confirm()
 
-            purchase_order = self.env['purchase.order'].search([
-                ('origin', '=', new_sale_order.name),
-            ], limit=1)
+            new_sale_order_line = new_sale_order.order_line[0]
+            print("*" * 20, new_sale_order_line.state_planning)
+            # Ensure the new sale order line has the correct state
+            new_sale_order_line.state_planning = 'en_stock'
+            print("*" * 20, new_sale_order_line.state_planning)
 
-            if purchase_order:
-                purchase_order.button_cancel()
-
-            delivery_order = self.env['stock.picking'].search([
-                ('origin', '=', new_sale_order.name),
-                ('state', '=', 'waiting'),
-            ], limit=1)
-
-            if delivery_order:
-                delivery_order.action_assign()
+            # purchase_order = self.env['purchase.order'].search([
+            #     ('origin', '=', new_sale_order.name),
+            # ], limit=1)
+            #
+            # if purchase_order:
+            #     purchase_order.button_cancel()
+            #
+            # delivery_order = self.env['stock.picking'].search([
+            #     ('origin', '=', new_sale_order.name),
+            #     ('state', '=', 'waiting'),
+            # ], limit=1)
+            #
+            # if delivery_order:
+            #     delivery_order.action_assign()
 
             sale_order_line.state = 'done'
 
