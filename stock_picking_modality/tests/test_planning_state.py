@@ -261,8 +261,8 @@ class TestPlanning(TransactionCase):
         picking = purchase_order.picking_ids
         print(f"Picking created: {picking.name} (ID: {picking.id})")
 
-        # Link the picking to the sale order
         picking.write({'sale_id': order.id})
+
 
         picking.action_confirm()
         print(f"Picking confirmed: {picking.name} (ID: {picking.id})")
@@ -275,21 +275,46 @@ class TestPlanning(TransactionCase):
             print(f"Move {move.id} partial quantity done set to {move.quantity_done}")
 
         picking.button_validate()
-        print(f"Partial picking validated: {picking.name} (ID: {picking.id})")
+        print(f"Picking validated: {picking.name} (ID: {picking.id})")
 
-        for line in order.order_line:
-            print(f"Sale Order Line ID: {line.id} state after partial receipt: {line.state_planning}")
+        # partial_picking_wizard = self.env['stock.backorder.confirmation'].create({
+        #     'pick_ids': [(4, picking.id)]
+        # })
+        # partial_picking_wizard.process()
+        # print(f"Partial picking processed: {picking.name} (ID: {picking.id})")
 
-        picking.action_assign()
+        print(f"Picking Details: ID: {picking.id}, Name: {picking.name}, State: {picking.state}")
         for move in picking.move_ids_without_package:
-            move.quantity_done = remaining_quantity
-            print(f"Move {move.id} remaining quantity done set to {move.quantity_done}")
-
-        picking.button_validate()
-        print(f"Remaining picking validated: {picking.name} (ID: {picking.id})")
+            print(
+                f"Move ID: {move.id}, Product: {move.product_id.name}, Quantity Done: {move.quantity_done}, State: {move.state}")
 
         for line in order.order_line:
-            print(f"Sale Order Line ID: {line.id} state after partial receipt: {line.state_planning}")
+            line._compute_state_planning()
+            self.assertEqual(line.state_planning, "en_stock_parcial")
+            print(f"Sale Order Line ID: {line.id} is in 'en_stock_parcial' state as expected.")
+
+        new_picking = self.env['stock.picking'].search([
+            ('origin', '=', purchase_order.name),
+            ('state', '=', 'assigned')
+        ], limit=1)
+
+        if new_picking:
+            new_picking.action_confirm()
+            new_picking.action_assign()
+            print(f"New picking created: {new_picking.name} (ID: {new_picking.id})")
+
+            for move in new_picking.move_ids_without_package:
+                move.quantity_done = remaining_quantity
+                print(f"Move {move.id} remaining quantity done set to {move.quantity_done}")
+
+            new_picking.button_validate()
+            print(f"Remaining picking validated: {new_picking.name} (ID: {new_picking.id})")
+
+            for line in order.order_line:
+                self.assertEqual(line.state_planning, "en_stock")
+                print(f"Sale Order Line ID: {line.id} is in 'en_stock' state as expected.")
+        else:
+            raise ValueError("No new picking found for the remaining quantity.")
 
     def _confirm_assigned_picking(self, order):
         pickings = self.env['stock.picking'].search([('origin', '=', order.name)])
@@ -564,28 +589,27 @@ class TestPlanning(TransactionCase):
         self._confirm_partial_purchase_order(order, partial_quantity=16, remaining_quantity=17)
         print(f"Purchase order created and confirmed for order: {order.name} (ID: {order.id})")
 
-        purchase_picking = order.picking_ids.filtered(
-            lambda p: p.state == 'assigned' and p.picking_type_id.code == 'incoming')
-        if purchase_picking:
-            purchase_picking.move_ids_without_package[0].quantity_done = 16  # Partial quantity
-            purchase_picking.button_validate()
-            print(f"Partial purchase picking validated: {purchase_picking.name} (ID: {purchase_picking.id})")
-
-            for line in order.order_line:
-                print(f"Sale Order Line ID: {line.id} state after partial receipt: {line.state_planning}")
-        else:
-            raise ValueError("No assigned incoming purchase picking found for the order.")
-
-        # Confirm purchase order and receive remaining quantity
-        purchase_picking = order.picking_ids.filtered(
-            lambda p: p.state == 'assigned' and p.picking_type_id.code == 'incoming')
-        if purchase_picking:
-            purchase_picking.move_ids_without_package[0].quantity_done = 17  # Remaining quantity
-            purchase_picking.button_validate()
-            print(f"Remaining purchase picking validated: {purchase_picking.name} (ID: {purchase_picking.id})")
-
-            for line in order.order_line:
-                print(f"Sale Order Line ID: {line.id} state after full receipt: {line.state_planning}")
-        else:
-            raise ValueError("No assigned incoming purchase picking found for the order.")
-
+        # purchase_picking = order.picking_ids.filtered(
+        #     lambda p: p.state == 'assigned' and p.picking_type_id.code == 'incoming')
+        # if purchase_picking:
+        #     purchase_picking.move_ids_without_package[0].quantity_done = 16  # Partial quantity
+        #     purchase_picking.button_validate()
+        #     print(f"Partial purchase picking validated: {purchase_picking.name} (ID: {purchase_picking.id})")
+        #
+        #     for line in order.order_line:
+        #         print(f"Sale Order Line ID: {line.id} state after partial receipt: {line.state_planning}")
+        # else:
+        #     raise ValueError("No assigned incoming purchase picking found for the order.")
+        #
+        # # Confirm purchase order and receive remaining quantity
+        # purchase_picking = order.picking_ids.filtered(
+        #     lambda p: p.state == 'assigned' and p.picking_type_id.code == 'incoming')
+        # if purchase_picking:
+        #     purchase_picking.move_ids_without_package[0].quantity_done = 17  # Remaining quantity
+        #     purchase_picking.button_validate()
+        #     print(f"Remaining purchase picking validated: {purchase_picking.name} (ID: {purchase_picking.id})")
+        #
+        #     for line in order.order_line:
+        #         print(f"Sale Order Line ID: {line.id} state after full receipt: {line.state_planning}")
+        # else:
+        #     raise ValueError("No assigned incoming purchase picking found for the order.")

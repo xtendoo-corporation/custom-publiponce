@@ -334,12 +334,6 @@ class SaleOrderLine(models.Model):
                         print(f" Salir del estado en stock")
                     break
 
-                # internal_moves = move.move_line_ids.filtered(
-                #     lambda x: x.qty_done == line.product_uom_qty and x.location_dest_id.usage == 'internal')
-                # if internal_moves:
-                #     line.state_planning = 'en_stock'
-                #     break
-
     def show_related_stock_move_lines(self):
         for line in self:
             stock_moves = line.move_ids
