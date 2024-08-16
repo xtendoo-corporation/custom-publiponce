@@ -299,8 +299,8 @@ class TestPlanning(TransactionCase):
 
         for line in order.order_line:
             line._compute_state_planning()
-            self.assertEqual(line.state_planning, "en_stock_parcial")
-            print(f"Sale Order Line ID: {line.id} is in 'en_stock_parcial' state as expected.")
+            self.assertEqual(line.state_planning, "in_stock_partially")
+            print(f"Sale Order Line ID: {line.id} is in 'in_stock_partially' state as expected.")
 
         new_picking = self.env['stock.picking'].search([
             ('origin', '=', purchase_order.name),
@@ -331,8 +331,8 @@ class TestPlanning(TransactionCase):
 
             for line in order.order_line:
                 line._compute_state_planning()
-                self.assertEqual(line.state_planning, "en_stock")
-                print(f"Sale Order Line ID: {line.id} is in 'en_stock' state as expected.")
+                self.assertEqual(line.state_planning, "in_stock")
+                print(f"Sale Order Line ID: {line.id} is in 'in_stock' state as expected.")
         else:
             raise ValueError("No new picking found for the remaining quantity.")
 
@@ -404,29 +404,29 @@ class TestPlanning(TransactionCase):
         print(f"Order confirmed: {order.name} (ID: {order.id})")
 
         for line in order.order_line:
-            self.assertEqual(line.state_planning, "espera_recepcion")
-            print(f"Sale Order Line ID: {line.id} is in 'espera_recepcion' state as expected.")
+            self.assertEqual(line.state_planning, "waiting_reception")
+            print(f"Sale Order Line ID: {line.id} is in 'waiting_reception' state as expected.")
 
         self._confirm_purchase_order(order)
         print(f"Purchase order created and confirmed for order: {order.name} (ID: {order.id})")
 
         for line in order.order_line:
-            self.assertEqual(line.state_planning, "en_stock")
-            print(f"Sale Order Line ID: {line.id} is in 'en_stock' state as expected.")
+            self.assertEqual(line.state_planning, "in_stock")
+            print(f"Sale Order Line ID: {line.id} is in 'in_stock' state as expected.")
 
         self._confirm_assigned_picking(order)
         print(f"First assigned picking confirmed for order: {order.name} (ID: {order.id})")
 
         for line in order.order_line:
-            self.assertEqual(line.state_planning, "en_furgon")
-            print(f"Sale Order Line ID: {line.id} is in 'en_furgon' state as expected.")
+            self.assertEqual(line.state_planning, "in_van")
+            print(f"Sale Order Line ID: {line.id} is in 'in_van' state as expected.")
 
         self._confirm_assigned_picking(order)
         print(f"Second assigned picking confirmed for order: {order.name} (ID: {order.id})")
 
         for line in order.order_line:
-            self.assertEqual(line.state_planning, "repartido")
-            print(f"Sale Order Line ID: {line.id} is in 'repartido' state as expected.")
+            self.assertEqual(line.state_planning, "delivered")
+            print(f"Sale Order Line ID: {line.id} is in 'delivered' state as expected.")
 
         pickings = self.env['stock.picking'].search([('origin', '=', order.name)])
         print(f"All pickings related to order {order.name}: {[picking.id for picking in pickings]}")
@@ -480,22 +480,22 @@ class TestPlanning(TransactionCase):
         print(f"Order confirmed: {order.name} (ID: {order.id})")
 
         for line in order.order_line:
-            assert line.state_planning == 'espera_recepcion', f"Expected 'espera_recepcion', got {line.state_planning}"
-            print(f"Sale Order Line ID: {line.id} is in 'espera_recepcion' state as expected.")
+            assert line.state_planning == 'waiting_reception', f"Expected 'waiting_reception', got {line.state_planning}"
+            print(f"Sale Order Line ID: {line.id} is in 'waiting_reception' state as expected.")
 
         self._confirm_purchase_order(order)
         print(f"Purchase order created and confirmed for order: {order.name} (ID: {order.id})")
 
         for line in order.order_line:
-            assert line.state_planning == 'en_stock', f"Expected 'en_stock', got {line.state_planning}"
-            print(f"Sale Order Line ID: {line.id} is in 'en_stock' state as expected.")
+            assert line.state_planning == 'in_stock', f"Expected 'in_stock', got {line.state_planning}"
+            print(f"Sale Order Line ID: {line.id} is in 'in_stock' state as expected.")
 
         self._confirm_assigned_picking(order)
         print(f"First assigned picking confirmed for order: {order.name} (ID: {order.id})")
 
         for line in order.order_line:
-            assert line.state_planning == 'en_furgon', f"Expected 'en_furgon', got {line.state_planning}"
-            print(f"Sale Order Line ID: {line.id} is in 'en_furgon' state as expected.")
+            assert line.state_planning == 'in_van', f"Expected 'in_van', got {line.state_planning}"
+            print(f"Sale Order Line ID: {line.id} is in 'in_van' state as expected.")
 
         print("*"*80,"Wizard a continuación")
         new_route = self._create_route_with_last_two_rules(transit_location, stock_picking_transit_type,
@@ -512,9 +512,9 @@ class TestPlanning(TransactionCase):
         wizard.action_confirm_partial_delivery()
 
         for line in order.order_line:
-            assert line.state_planning == 'repartido', f"Expected 'repartido', got {line.state_planning}"
+            assert line.state_planning == 'delivered', f"Expected 'delivered', got {line.state_planning}"
             print("*"*20, "Order anterior")
-            print(f"Sale Order Line ID: {line.id} is in 'repartido' state as expected.")
+            print(f"Sale Order Line ID: {line.id} is in 'delivered' state as expected.")
 
         new_order = self.env['sale.order'].search([
             ('order_line.product_uom_qty', '=', 16.5),
@@ -540,22 +540,22 @@ class TestPlanning(TransactionCase):
                 print(f"Destiny: {line.destiny_id.name} (ID: {line.destiny_id.id})")
                 print(f"Zone: {line.zone_id.name} (ID: {line.zone_id.id})")
             for line in new_order.order_line:
-                assert line.state_planning == 'en_stock', f"Expected 'en_stock', got {line.state_planning}"
-                print(f"Sale Order Line ID: {line.id} is in 'en_stock' state as expected.")
+                assert line.state_planning == 'in_stock', f"Expected 'in_stock', got {line.state_planning}"
+                print(f"Sale Order Line ID: {line.id} is in 'in_stock' state as expected.")
 
             self._confirm_assigned_picking(new_order)
             print(f"Assigned picking confirmed for order created with wizard: {new_order.name} (ID: {new_order.id})")
 
             for line in new_order.order_line:
-                assert line.state_planning == 'en_furgon', f"Expected 'en_furgon', got {line.state_planning}"
-                print(f"Sale Order Line ID: {line.id} is in 'en_furgon' state as expected.")
+                assert line.state_planning == 'in_van', f"Expected 'in_van', got {line.state_planning}"
+                print(f"Sale Order Line ID: {line.id} is in 'in_van' state as expected.")
 
             self._confirm_assigned_picking(new_order)
             print(f"Assigned picking confirmed for order created with wizard: {new_order.name} (ID: {new_order.id})")
 
             for line in new_order.order_line:
-                assert line.state_planning == 'repartido', f"Expected 'repartido', got {line.state_planning}"
-                print(f"Sale Order Line ID: {line.id} is in 'repartido' state as expected.")
+                assert line.state_planning == 'delivered', f"Expected 'delivered', got {line.state_planning}"
+                print(f"Sale Order Line ID: {line.id} is in 'delivered' state as expected.")
         else:
             print("No new order found.")
 
@@ -602,8 +602,8 @@ class TestPlanning(TransactionCase):
         print(f"Order confirmed: {order.name} (ID: {order.id})")
 
         for line in order.order_line:
-            self.assertEqual(line.state_planning, "espera_recepcion")
-            print(f"Sale Order Line ID: {line.id} is in 'espera_recepcion' state as expected.")
+            self.assertEqual(line.state_planning, "waiting_reception")
+            print(f"Sale Order Line ID: {line.id} is in 'waiting_reception' state as expected.")
 
             # Confirm purchase order and receive partial quantity
         self._confirm_partial_purchase_order(order, partial_quantity=16, remaining_quantity=17)

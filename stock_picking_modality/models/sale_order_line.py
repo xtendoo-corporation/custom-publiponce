@@ -1,4 +1,4 @@
-# Copyright 2023 Salvador, Abraham (https://xtendoo.es)
+# Copyright 2023 Salvador, Abraham (https://xtsendoo.es)
 # License AGPL-3.0 or later (http://www.gnu.org/licenses/agpl.html).
 from datetime import timedelta
 
@@ -28,10 +28,6 @@ class SaleOrderLine(models.Model):
     price_fee = fields.Float(
         comodel_name='stock.picking.modality.destiny.price',
         string='Precio Tarifa',
-    )
-    is_delivered = fields.Boolean(
-        string='Delivered',
-        default=False,
     )
     date_scheduled = fields.Date(
         string='Date Scheduled',
@@ -67,13 +63,15 @@ class SaleOrderLine(models.Model):
         compute='_compute_partner_color'
     )
     state_planning = fields.Selection([
-        ('espera_recepcion', 'Espera recepción'),
-        ('en_stock_parcial', 'En stock parcialmente'),
-        ('en_stock', 'En stock'),
-        ('en_furgon', 'En furgón'),
-        ('repartido', 'Repartido')
+        ('waiting_reception', 'Waiting for reception'),
+        ('in_stock_partially', 'Partially in stock'),
+        ('in_stock', 'In stock'),
+        ('in_van', 'In van'),
+        ('delivered', 'Delivered')
     ], string='State Planning',
         readonly=True,
+        default='waiting_reception',
+        store=True,
         compute='_compute_state_planning')
 
     @api.depends('product_template_id', 'product_uom_qty')
@@ -176,9 +174,9 @@ class SaleOrderLine(models.Model):
         yesterday = fields.Date.today() - timedelta(days=1)
         plannings = self.search([
             ('date_scheduled', '=', yesterday),
-            ('is_delivered', '=', False),
+            ('state_planning', '!=', 'delivered'),
         ])
-        plannings.write({'is_delivered': True})
+        plannings.write({'state_planning': 'delivered'})
 
     def action_deliver_products(self):
         for line in self:
@@ -201,8 +199,7 @@ class SaleOrderLine(models.Model):
                         print(move.quantity_done)
                     last_transfer.button_validate()
                     print("realizado")
-                    line.is_delivered = True
-                    line.state_planning = 'repartido'
+                    line.state_planning = 'delivered'
                 except Exception as e:
                     print(f"Error during button_validate: {e}")
 
@@ -231,7 +228,7 @@ class SaleOrderLine(models.Model):
                 for move in last_receipt.move_ids_without_package:
                     move.quantity_done = line.product_uom_qty
                 last_receipt.button_validate()
-                line.state_planning = 'en_stock'
+                line.state_planning = 'in_stock'
 
     def action_move_to_truck(self):
         for line in self:
@@ -250,7 +247,7 @@ class SaleOrderLine(models.Model):
                     print(f"Move ID: {move.id}, Quantity Done: {move.quantity_done}")
 
                 transfer.button_validate()
-                line.state_planning = 'en_furgon'
+                line.state_planning = 'in_van'
 
     def action_partial_delivery(self):
         return {
@@ -264,11 +261,11 @@ class SaleOrderLine(models.Model):
             },
         }
 
-    @api.depends('move_ids.move_line_ids.qty_done')
+    @api.depends('move_ids.move_line_ids.qty_done','move_ids.quantity_done' )
     def _compute_state_planning(self):
         for line in self:
             print("*" * 100, "Entramos en la linea")
-            line.state_planning = 'espera_recepcion'
+            line.state_planning = 'waiting_reception'
             print(
                 f"Sale Order Line ID: {line.id}, Product: {line.product_id.name}, Quantity Ordered: {line.product_uom_qty}")
 
@@ -289,10 +286,10 @@ class SaleOrderLine(models.Model):
                     reserved_quantity = stock_quant.reserved_quantity
                     print(f"Reserved Stock Quantity: {reserved_quantity}")
                     if reserved_quantity >= line.product_uom_qty:
-                        line.state_planning = 'en_stock'
+                        line.state_planning = 'in_stock'
                         print(f" Salir del estado en stock")
                     elif 0 < reserved_quantity < line.product_uom_qty:
-                        line.state_planning = 'en_stock_parcial'
+                        line.state_planning = 'in_stock_partially'
                         print(f" Salir del estado en stock parcialmente")
 
             for move in line.move_ids:
@@ -302,16 +299,15 @@ class SaleOrderLine(models.Model):
                 customer_moves = move.move_line_ids.filtered(
                     lambda x: x.qty_done == line.product_uom_qty and x.location_dest_id.usage == 'customer')
                 if customer_moves:
-                    line.state_planning = 'repartido'
-                    line.is_delivered = True
-                    print(f" Salir del estado repartido")
+                    line.state_planning = 'delivered'
+                    print(f" Salir del estado delivered")
                     break
 
                 transit_moves = move.move_line_ids.filtered(
                     lambda x: x.location_dest_id.usage == 'transit')
                 if transit_moves:
                     if any(x.qty_done == line.product_uom_qty for x in transit_moves):
-                        line.state_planning = 'en_furgon'
+                        line.state_planning = 'in_van'
                         print(f" Salir del estado en furgon")
                         break
                     elif purchase_picking:
@@ -324,13 +320,13 @@ class SaleOrderLine(models.Model):
                             reserved_quantity = stock_quant.reserved_quantity
                             print(f"Reserved Stock Quantity: {reserved_quantity}")
                             if reserved_quantity >= line.product_uom_qty:
-                                line.state_planning = 'en_stock'
+                                line.state_planning = 'in_stock'
                                 print(f" Salir del estado en stock")
                             elif 0 < reserved_quantity < line.product_uom_qty:
-                                line.state_planning = 'en_stock_parcial'
+                                line.state_planning = 'in_stock_partially'
                                 print(f" Salir del estado en stock parcialmente")
                     if not purchase_picking:
-                        line.state_planning = 'en_stock'
+                        line.state_planning = 'in_stock'
                         print(f" Salir del estado en stock")
                     break
 

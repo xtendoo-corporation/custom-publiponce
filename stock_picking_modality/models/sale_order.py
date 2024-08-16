@@ -21,37 +21,6 @@ class SaleOrder(models.Model):
         string='Zone',
     )
 
-    # def action_confirm(self):
-    #     res = super().action_confirm()
-    #     for line in self.order_line:
-    #         date_scheduled = self.date_order if self.date_order else False
-    #         existing_plannings = self.env['stock.move.planning'].search([
-    #             ('date_scheduled', '=', date_scheduled)
-    #         ])
-    #         planning_count = len(existing_plannings)
-    #         scheduled_time = datetime.combine(date_scheduled, datetime.min.time()) + timedelta(hours=8 + planning_count)
-    #         self.env['stock.move.planning'].create({
-    #             'product_id': line.product_id.id,
-    #             'product_name': line.product_id.name,
-    #             'modality_id': line.modality_id.id if line.modality_id else False,
-    #             'destiny_id': line.destiny_id.id if line.destiny_id else False,
-    #             'zone_id': line.zone_id.id if line.zone_id else False,
-    #             'res_partner_id': False,
-    #             'order_id': self.id,
-    #             'order_line_id': line.id,
-    #             'partner_id': self.partner_id.id if self.partner_id else False,
-    #             'date_scheduled': date_scheduled,
-    #             'date_scheduled_time': scheduled_time,
-    #             'quantity': line.product_uom_qty,
-    #             'is_delivered': False,
-    #             'delivery_date': False,
-    #         })
-    #         print("*"*80)
-    #         print(line.id)
-    #         print(line.product_id)
-    #         print(line.product_uom_qty)
-    #     return res
-
     @api.onchange('modality_id')
     def _onchange_modality_id(self):
         if self.modality_id:

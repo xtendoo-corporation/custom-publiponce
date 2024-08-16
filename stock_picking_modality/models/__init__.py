@@ -6,7 +6,6 @@ from . import stock_picking_modality_destiny_price
 from . import stock_move_line
 from . import stock_picking_zone
 from . import res_partner
-from . import stock_move_planning
 from . import sale_order
 from . import sale_order_line
 from . import partial_delivery_wizard

@@ -40,8 +40,7 @@ class PartialDeliveryWizard(models.TransientModel):
         remaining_qty = sale_order_line.product_uom_qty - self.cantidad_entregada
 
         sale_order_line.product_uom_qty = self.cantidad_entregada
-        sale_order_line.is_delivered = True
-        sale_order_line.state_planning = 'repartido'
+        sale_order_line.state_planning = 'delivered'
 
         picking = self.env['stock.picking'].search([
             ('origin', '=', sale_order_line.order_id.name),
@@ -90,7 +89,7 @@ class PartialDeliveryWizard(models.TransientModel):
                     'product_uom': sale_order_line.product_uom.id,
                     'price_unit': sale_order_line.price_unit,
                     'name': sale_order_line.name,
-                    'state_planning': 'en_stock',
+                    'state_planning': 'in_stock',
                     'date_scheduled': fields.Datetime.now() + timedelta(days=1),
                     'route_id': self.route_id.id,
                     'modality_id': self.modality_id.id,
@@ -104,7 +103,7 @@ class PartialDeliveryWizard(models.TransientModel):
             new_sale_order_line = new_sale_order.order_line[0]
             print("*" * 20, new_sale_order_line.state_planning)
             # Ensure the new sale order line has the correct state
-            new_sale_order_line.state_planning = 'en_stock'
+            new_sale_order_line.state_planning = 'in_stock'
             print("*" * 20, new_sale_order_line.state_planning)
 
             # purchase_order = self.env['purchase.order'].search([

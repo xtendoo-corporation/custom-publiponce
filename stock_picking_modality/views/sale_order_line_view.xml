@@ -12,7 +12,7 @@
                 <field name="zone_id"/>
                 <field name="partner_id"/>
                 <field name="date_scheduled"/>
-                <field name="is_delivered"/>
+                <field name="state_planning"/>
                 <field name="product_uom_qty"/>
                 <field name="price" string="Coste"/>
                 <field name="price_subtotal"/>
@@ -27,19 +27,19 @@
             <form string="Sale order line Planning">
                 <header>
                     <button name="action_receive_products" type="object" string="Recepcionar" class="btn-primary"
-                            attrs="{'invisible': [('state_planning', '!=', 'espera_recepcion')]}"/>
+                            attrs="{'invisible': [('state_planning', '!=', 'waiting_reception')]}"/>
                     <button name="action_move_to_truck" type="object" string="Mover a furgón" class="btn-primary"
-                            attrs="{'invisible': [('state_planning', '!=', 'en_stock')]}"/>
+                            attrs="{'invisible': [('state_planning', '!=', 'in_stock')]}"/>
                     <button name="action_deliver_products" type="object" string="Entregar al cliente"
                             class="btn-primary"
-                            attrs="{'invisible': [('state_planning', '!=', 'en_furgon')]}"/>
+                            attrs="{'invisible': [('state_planning', '!=', 'in_van')]}"/>
                     <button name="action_partial_delivery" type="object" string="Entrega Parcial"
                             class="btn-primary"
-                            attrs="{'invisible': [('state_planning', '!=', 'en_furgon')]}"/>
-                    <button name="show_related_stock_move_lines" type="object" string="Mostrar Stock Move Lines"
-                            class="btn-secondary"/>
+                            attrs="{'invisible': [('state_planning', '!=', 'in_van')]}"/>
+<!--                    <button name="show_related_stock_move_lines" type="object" string="Mostrar Stock Move Lines"-->
+<!--                            class="btn-secondary"/>-->
                     <field name="state_planning" widget="statusbar"
-                           statusbar_visible="espera_recepcion,en_stock,en_furgon,repartido"
+                           statusbar_visible="waiting_reception,in_stock_partially,in_stock,in_van,delivered"
                            modifiers="{'readonly': true}"/>
                 </header>
                 <sheet>
@@ -50,7 +50,7 @@
                         <field name="destiny_id"/>
                         <field name="zone_id"/>
                         <field name="date_scheduled"/>
-                        <field name="is_delivered" readonly="1"/>
+                        <field name="state_planning"/>
                         <field name="product_uom_qty"/>
                         <field name="price" string="Coste"/>
                         <field name="price_subtotal"/>
@@ -83,7 +83,7 @@
                 <field name="zone_id"/>
                 <field name="partner_id"/>
                 <field name="date_scheduled"/>
-                <field name="is_delivered"/>
+                <field name="state_planning"/>
                 <field name="product_uom_qty"/>
                 <field name="price" string="Coste"/>
                 <field name="price_subtotal"/>
@@ -98,9 +98,9 @@
                 <separator/>
                 <filter string="Recurso" name="group_by_route_id" context="{'group_by':'route_id'}"/>
                 <separator/>
-                <filter string="No entregado" name="no_entregado_filter" domain="[('is_delivered', '=', False)]"/>
+                <filter string="Not delivered" name="not_delivered_filter" domain="[('state_planning', '!=', 'delivered')]"/>
                 <separator/>
-                <filter string="Delivered" name="entregado_filter" domain="[('is_delivered', '=', True)]"/>
+                <filter string="Delivered" name="delivered_filter" domain="[('state_planning', '=', 'delivered')]"/>
             </search>
         </field>
     </record>
@@ -117,7 +117,6 @@
                 <field name="zone_id"/>
                 <field name="partner_id"/>
                 <field name="date_scheduled"/>
-                <field name="is_delivered"/>
                 <field name="product_uom_qty"/>
                 <field name="state_planning"/>
                 <field name="color"/>
@@ -131,24 +130,36 @@
                                     <strong>
                                         <t t-esc="record.product_template_id.value"/>
                                     </strong>
-                                    <t t-if="record.state_planning.raw_value != 'espera_recepcion'">
+                                    <t t-if="record.state_planning.raw_value == 'delivered'">
                                         <strong
                                             t-attf-style="text-align: right;">
                                             <t t-esc="record.product_uom_qty.value"/>
-                                            <t t-if="record.is_delivered.raw_value">
                                                 <span></span>
                                                 <i class="fa fa-truck" title="Entregado"/>
-                                            </t>
                                         </strong>
                                     </t>
-                                    <t t-if="record.state_planning.raw_value == 'espera_recepcion'">
+                                     <t t-if="record.state_planning.raw_value == 'in_stock'">
+                                        <strong
+                                            t-attf-style="text-align: right;">
+                                            <t t-esc="record.product_uom_qty.value"/>
+                                        </strong>
+                                    </t>
+                                    <t t-if="record.state_planning.raw_value == 'in_van'">
+                                        <strong
+                                            t-attf-style="text-align: right;">
+                                            <t t-esc="record.product_uom_qty.value"/>
+                                        </strong>
+                                    </t>
+                                    <t t-if="record.state_planning.raw_value == 'waiting_reception'">
                                         <strong
                                             t-attf-style="text-align: right; color: red">
                                             <t t-esc="record.product_uom_qty.value"/>
-                                            <t t-if="record.is_delivered.raw_value">
-                                                <span></span>
-                                                <i class="fa fa-truck" title="Entregado"/>
-                                            </t>
+                                        </strong>
+                                    </t>
+                                    <t t-if="record.state_planning.raw_value == 'in_stock_partially'">
+                                        <strong
+                                            t-attf-style="text-align: right; color: orange">
+                                            <t t-esc="record.product_uom_qty.value"/>
                                         </strong>
                                     </t>
                                 </div>
@@ -212,7 +223,7 @@
                 <field name="modality_id" type="col"/>
                 <field name="destiny_id"/>
                 <field name="zone_id"/>
-                <field name="is_delivered" type="col"/>
+                <field name="state_planning" type="col"/>
             </pivot>
         </field>
     </record>
@@ -223,5 +234,47 @@
         <field name="state">code</field>
         <field name="code">action = model.action_deliver_products()</field>
     </record>
+
+     <record id="cron_mark_as_delivered" model="ir.cron">
+        <field name="name">Marcar como entregado</field>
+        <field name="model_id" ref="model_sale_order_line"/>
+        <field name="state">code</field>
+        <field name="code">model.mark_as_delivered()</field>
+        <field name="interval_number">1</field>
+        <field name="interval_type">days</field>
+        <field name="numbercall">-1</field>
+        <field name="nextcall" eval="(DateTime.now() + timedelta(hours=1)).strftime('%Y-%m-%d %H:%M:%S')"/>
+    </record>
+
+    <record id="action_sale_order_line_planning" model="ir.actions.act_window">
+        <field name="name">Planning</field>
+        <field name="res_model">sale.order.line</field>
+        <field name="view_mode">kanban,calendar,pivot,tree,form</field>
+        <field name="context">{'search_default_not_delivered_filter': 1, 'search_default_group_by_date_scheduled': 1}
+        </field>
+        <field name="help" type="html">
+            <p class="o_view_nocontent_smiling_face">
+                Create your first planning
+            </p>
+            <p>
+                Here you can create and manage your stock move planning.
+            </p>
+        </field>
+    </record>
+
+    <record id="action_res_partner_resource" model="ir.actions.act_window">
+        <field name="name">Resources</field>
+        <field name="res_model">res.partner</field>
+        <field name="view_mode">tree,form</field>
+        <field name="domain">[('is_resource','=',True)]</field>
+    </record>
+
+    <menuitem id="menu_sale_order_line_planning" name="Planning" parent="stock.menu_stock_root" sequence="100"/>
+
+    <menuitem id="menu_planning" name="Planning" parent="menu_sale_order_line_planning"
+              action="action_sale_order_line_planning" sequence="10"/>
+
+    <menuitem id="menu_res_partner_resource" name="Resources" parent="menu_sale_order_line_planning"
+              action="action_res_partner_resource" sequence="20"/>
 
 </odoo>
