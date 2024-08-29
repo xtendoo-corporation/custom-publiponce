@@ -13,10 +13,10 @@
             </xpath>
             <xpath
                 expr="//field[@name='order_line']/tree/field[@name='product_uom_qty']" position="before">
+                <field name="date_scheduled"/>
                 <field name="modality_id"/>
                 <field name="destiny_id"/>
                 <field name="zone_id"/>
-                <field name="date_scheduled"/>
             </xpath>
         </field>
     </record>

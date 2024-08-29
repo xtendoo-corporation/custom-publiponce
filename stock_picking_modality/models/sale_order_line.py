@@ -1,8 +1,9 @@
 # Copyright 2023 Salvador, Abraham (https://xtsendoo.es)
 # License AGPL-3.0 or later (http://www.gnu.org/licenses/agpl.html).
-from datetime import timedelta
+from datetime import timedelta, datetime
 
 from odoo import api, fields, models
+from odoo.exceptions import ValidationError
 
 
 class SaleOrderLine(models.Model):
@@ -33,6 +34,9 @@ class SaleOrderLine(models.Model):
         string='Date Scheduled',
         required=True,
         readonly=False,
+    )
+    date_scheduled_time = fields.Datetime(
+        string='Date Scheduled Time',
     )
     price = fields.Float(
         string='Price',
@@ -72,12 +76,14 @@ class SaleOrderLine(models.Model):
         readonly=True,
         default='waiting_reception',
         store=True,
-        compute='_compute_state_planning')
+        compute='_compute_state_planning'
+    )
 
-    @api.depends('product_template_id', 'product_uom_qty')
+
+    @api.depends('partner_id', 'zone_id', 'product_uom_qty')
     def _compute_name(self):
         for record in self:
-            record.name = f"{record.product_template_id.name} - {record.product_uom_qty}"
+            record.name = f"{record.partner_id.name} - {record.zone_id.name} - {record.product_uom_qty}"
 
     @api.depends('partner_id')
     def _compute_partner_color(self):
@@ -96,12 +102,55 @@ class SaleOrderLine(models.Model):
             else:
                 record.in_stock = False
 
+    # @api.model
+    # def create(self, vals):
+    #     record = super(SaleOrderLine, self).create(vals)
+    #     if record.partner_id and record.partner_id not in record.tag_ids:
+    #         record.tag_ids = [(4, record.partner_id.id)]
+    #     return record
+
     @api.model
     def create(self, vals):
+        # Set default date_scheduled_time to date_scheduled at 08:00:00
+        if 'date_scheduled' in vals:
+            date_scheduled = fields.Date.from_string(vals['date_scheduled'])
+            date_scheduled_time = datetime.combine(date_scheduled, datetime.min.time()) + timedelta(hours=8)
+            while self.search([('date_scheduled_time', '=', date_scheduled_time)]):
+                date_scheduled_time += timedelta(hours=1)
+            vals['date_scheduled_time'] = date_scheduled_time
+        # Check for duplicate product lines on the same scheduled date
+        if 'product_id' in vals and 'date_scheduled' in vals:
+            existing_line = self.search([
+                ('product_id', '=', vals['product_id']),
+                ('date_scheduled', '=', vals['date_scheduled'])
+            ])
+            if existing_line:
+                raise ValidationError("No pueden haber dos líneas con el mismo producto en la misma fecha planificada.")
+
+        # Create the record
         record = super(SaleOrderLine, self).create(vals)
+
+        # Update tag_ids field
         if record.partner_id and record.partner_id not in record.tag_ids:
             record.tag_ids = [(4, record.partner_id.id)]
+
         return record
+
+    def write(self, vals):
+        if 'product_id' in vals or 'date_scheduled' in vals:
+            for line in self:
+                product_id = vals.get('product_id', line.product_id.id)
+                date_scheduled = vals.get('date_scheduled', line.date_scheduled)
+                existing_line = self.search([
+                    ('product_id', '=', product_id),
+                    ('date_scheduled', '=', date_scheduled),
+                    ('id', '!=', line.id)
+                ])
+                if existing_line:
+                    raise ValidationError(
+                        "No pueden haber dos líneas con el mismo producto en la misma fecha planificada.")
+        res = super(SaleOrderLine, self).write(vals)
+        return res
 
     @api.onchange('modality_id', 'destiny_id', 'zone_id')
     def _on_change_price(self):
@@ -128,8 +177,58 @@ class SaleOrderLine(models.Model):
         else:
             self.price_fee = 0
 
-    @api.onchange('modality_id')
+    # @api.onchange('modality_id')
+    # def _onchange_modality_id(self):
+    #     if self.modality_id:
+    #         destiny_ids = self.env['stock.picking.modality.destiny.price'].search(
+    #             [('modality_id', '=', self.modality_id.id)]).mapped('destiny_id.id')
+    #         if self.destiny_id.id not in destiny_ids:
+    #             self.destiny_id = False
+    #         return {
+    #             'domain': {
+    #                 'destiny_id': [('id', 'in', destiny_ids)]
+    #             }
+    #         }
+    #     else:
+    #         self.destiny_id = False
+    #         return {
+    #             'domain': {
+    #                 'destiny_id': []
+    #             }
+    #         }
+
+    @api.onchange('modality_id', 'date_scheduled', 'route_id')
     def _onchange_modality_id(self):
+        if not self.date_scheduled or not self.route_id:
+            return
+
+        allowed_modality_ids = []
+        simple_lines = self.search([
+            ('date_scheduled', '=', self.date_scheduled),
+            ('route_id', '=', self.route_id.id),
+            ('modality_id.name', '=', 'Simple')
+        ])
+        double_lines = self.search([
+            ('date_scheduled', '=', self.date_scheduled),
+            ('route_id', '=', self.route_id.id),
+            ('modality_id.name', '=', 'Doble')
+        ])
+        triple_lines = self.search([
+            ('date_scheduled', '=', self.date_scheduled),
+            ('route_id', '=', self.route_id.id),
+            ('modality_id.name', '=', 'Triple')
+        ])
+
+        if not simple_lines:
+            allowed_modality_ids = self.env['stock.picking.modality'].search([('name', '=', 'Simple')]).ids
+        elif not double_lines:
+            allowed_modality_ids = self.env['stock.picking.modality'].search([('name', 'in', ['Simple', 'Doble'])]).ids
+        elif not triple_lines:
+            allowed_modality_ids = self.env['stock.picking.modality'].search(
+                [('name', 'in', ['Simple', 'Doble', 'Triple'])]).ids
+        else:
+            allowed_modality_ids = self.env['stock.picking.modality'].search([]).ids
+
         if self.modality_id:
             destiny_ids = self.env['stock.picking.modality.destiny.price'].search(
                 [('modality_id', '=', self.modality_id.id)]).mapped('destiny_id.id')
@@ -137,6 +236,7 @@ class SaleOrderLine(models.Model):
                 self.destiny_id = False
             return {
                 'domain': {
+                    'modality_id': [('id', 'in', allowed_modality_ids)],
                     'destiny_id': [('id', 'in', destiny_ids)]
                 }
             }
@@ -144,9 +244,31 @@ class SaleOrderLine(models.Model):
             self.destiny_id = False
             return {
                 'domain': {
+                    'modality_id': [('id', 'in', allowed_modality_ids)],
                     'destiny_id': []
                 }
             }
+
+    @api.onchange('date_scheduled')
+    def _onchange_date_scheduled(self):
+        if self.date_scheduled:
+            self.modality_id = False
+            self.zone_id = False
+            self.destiny_id = False
+            date_scheduled = fields.Date.from_string(self.date_scheduled)
+            date_scheduled_time = datetime.combine(date_scheduled, datetime.min.time()) + timedelta(hours=8)
+            while self.search([('date_scheduled_time', '=', date_scheduled_time)]):
+                date_scheduled_time += timedelta(hours=1)
+            self.date_scheduled_time = date_scheduled_time
+
+
+    @api.onchange('route_id')
+    def _onchange_route_id(self):
+        if self.route_id:
+            self.modality_id = False
+            self.zone_id = False
+            self.destiny_id = False
+
 
     @api.onchange('destiny_id')
     def _onchange_destiny_id(self):
@@ -169,6 +291,7 @@ class SaleOrderLine(models.Model):
                 }
             }
 
+
     @api.model
     def mark_as_delivered(self):
         yesterday = fields.Date.today() - timedelta(days=1)
@@ -177,6 +300,7 @@ class SaleOrderLine(models.Model):
             ('state_planning', '!=', 'delivered'),
         ])
         plannings.write({'state_planning': 'delivered'})
+
 
     def action_deliver_products(self):
         for line in self:
@@ -202,6 +326,7 @@ class SaleOrderLine(models.Model):
                     line.state_planning = 'delivered'
                 except Exception as e:
                     print(f"Error during button_validate: {e}")
+
 
     def action_receive_products(self):
         for line in self:
@@ -230,6 +355,7 @@ class SaleOrderLine(models.Model):
                 last_receipt.button_validate()
                 line.state_planning = 'in_stock'
 
+
     def action_move_to_truck(self):
         for line in self:
             transfer = self.env['stock.picking'].search([
@@ -249,6 +375,7 @@ class SaleOrderLine(models.Model):
                 transfer.button_validate()
                 line.state_planning = 'in_van'
 
+
     def action_partial_delivery(self):
         return {
             'type': 'ir.actions.act_window',
@@ -261,7 +388,8 @@ class SaleOrderLine(models.Model):
             },
         }
 
-    @api.depends('move_ids.move_line_ids.qty_done','move_ids.quantity_done' )
+
+    @api.depends('move_ids.move_line_ids.qty_done', 'move_ids.quantity_done')
     def _compute_state_planning(self):
         for line in self:
             print("*" * 100, "Entramos en la linea")
@@ -329,6 +457,7 @@ class SaleOrderLine(models.Model):
                         line.state_planning = 'in_stock'
                         print(f" Salir del estado en stock")
                     break
+
 
     def show_related_stock_move_lines(self):
         for line in self:
