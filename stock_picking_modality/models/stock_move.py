@@ -29,6 +29,21 @@ class StockMove(models.Model):
         related='sale_line_id.zone_id',
         store=True,
     )
+    # modality_id = fields.Many2one(
+    #     comodel_name='stock.picking.modality',
+    #     string='Modality',
+    #     store=True,
+    # )
+    # destiny_id = fields.Many2one(
+    #     comodel_name='stock.picking.destiny',
+    #     string='Destiny',
+    #     store=True,
+    # )
+    # zone_id = fields.Many2one(
+    #     comodel_name='stock.picking.zone',
+    #     string='Zone',
+    #     store=True,
+    # )
     price = fields.Float(
         string='Precio',
         compute='_on_change_price',

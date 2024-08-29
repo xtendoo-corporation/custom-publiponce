@@ -25,6 +25,7 @@
         <field name="arch" type="xml">
             <form string="Sale order line Planning">
                 <header>
+                    <button name="action_view_sale_order" type="object" string="Ir al Pedido" class="btn-secondary"/>
                     <button name="action_receive_products" type="object" string="Recepcionar" class="btn-primary"
                             attrs="{'invisible': [('state_planning', '!=', 'waiting_reception')]}"/>
                     <button name="action_move_to_truck" type="object" string="Mover a furgón" class="btn-primary"
@@ -35,8 +36,8 @@
                     <button name="action_partial_delivery" type="object" string="Entrega Parcial"
                             class="btn-primary"
                             attrs="{'invisible': [('state_planning', '!=', 'in_van')]}"/>
-<!--                    <button name="show_related_stock_move_lines" type="object" string="Mostrar Stock Move Lines"-->
-<!--                            class="btn-secondary"/>-->
+                    <!--                    <button name="show_related_stock_move_lines" type="object" string="Mostrar Stock Move Lines"-->
+                    <!--                            class="btn-secondary"/>-->
                     <field name="state_planning" widget="statusbar"
                            statusbar_visible="waiting_reception,in_stock_partially,in_stock,in_van,delivered"
                            modifiers="{'readonly': true}"/>
@@ -57,14 +58,11 @@
                         <field name="price" string="Coste"/>
                     </group>
                 </sheet>
-<!--                                <div class="oe_chatter">-->
-<!--                                    <field-->
-<!--                                        name="message_follower_ids"-->
-<!--                                        widget="mail_followers"-->
-<!--                                        help="Follow this salesteam to automatically track the events associated to users of this team."-->
-<!--                                    />-->
-<!--                                    <field name="message_ids" widget="mail_thread"/>-->
-<!--                                </div>-->
+                <div class="oe_chatter">
+                    <field name="message_follower_ids" widget="mail_followers"/>
+                    <field name="activity_ids" widget="mail_activity"/>
+                    <field name="message_ids" widget="mail_thread"/>
+                </div>
             </form>
         </field>
     </record>
@@ -96,7 +94,8 @@
                 <separator/>
                 <filter string="Recurso" name="group_by_route_id" context="{'group_by':'route_id'}"/>
                 <separator/>
-                <filter string="Not delivered" name="not_delivered_filter" domain="[('state_planning', '!=', 'delivered')]"/>
+                <filter string="Not delivered" name="not_delivered_filter"
+                        domain="[('state_planning', '!=', 'delivered')]"/>
                 <separator/>
                 <filter string="Delivered" name="delivered_filter" domain="[('state_planning', '=', 'delivered')]"/>
             </search>
@@ -126,21 +125,21 @@
                             <div class="oe_kanban_details">
                                 <div class="o_kanban_record_title d-flex justify-content-between">
                                     <strong style="font-size: 18px;">
-                                         <field name="tag_ids" widget="many2many_tags"
-                                               options="{'color_field': 'color'}"  invisible="1"/>
+                                        <field name="tag_ids" widget="many2many_tags"
+                                               options="{'color_field': 'color'}" invisible="1"/>
                                         <i class="fa fa-user" aria-hidden="true" style="margin-right: 2px;"/>
-                                        <t t-esc="record.partner_id.value" />
-<!--                                        <t t-esc="record.product_template_id.value"/>-->
+                                        <t t-esc="record.partner_id.value"/>
+                                        <!--                                        <t t-esc="record.product_template_id.value"/>-->
                                     </strong>
                                     <t t-if="record.state_planning.raw_value == 'delivered'">
                                         <strong
                                             t-attf-style="text-align: right;">
                                             <t t-esc="record.product_uom_qty.value"/>
-                                                <span></span>
-                                                <i class="fa fa-truck" title="Entregado"/>
+                                            <span></span>
+                                            <i class="fa fa-truck" title="Entregado"/>
                                         </strong>
                                     </t>
-                                     <t t-if="record.state_planning.raw_value == 'in_stock'">
+                                    <t t-if="record.state_planning.raw_value == 'in_stock'">
                                         <strong
                                             t-attf-style="text-align: right;">
                                             <t t-esc="record.product_uom_qty.value"/>
@@ -171,7 +170,7 @@
                                         <div>
                                             <span class="badge rounded-pill bg-light"
                                                   style="color: black; font-size: 1.05em; margin-bottom: 2px;">
-                                                 <t t-esc="record.zone_id.value"/>
+                                                <t t-esc="record.zone_id.value"/>
                                             </span>
                                             <span class="badge rounded-pill bg-light"
                                                   style="font-size: 1.05em; margin-bottom: 2px; color: grey;">
@@ -184,7 +183,7 @@
                                         </div>
                                     </div>
                                     <div class="col-12">
-                                       <t t-esc="record.route_id.value"/>
+                                        <t t-esc="record.route_id.value"/>
                                     </div>
                                     <div class="col-12">
                                         <span class="badge rounded-pill bg-info"
@@ -237,7 +236,7 @@
         <field name="code">action = model.action_deliver_products()</field>
     </record>
 
-     <record id="cron_mark_as_delivered" model="ir.cron">
+    <record id="cron_mark_as_delivered" model="ir.cron">
         <field name="name">Marcar como entregado</field>
         <field name="model_id" ref="model_sale_order_line"/>
         <field name="state">code</field>

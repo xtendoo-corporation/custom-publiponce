@@ -21,6 +21,10 @@ class PartialDeliveryWizard(models.TransientModel):
         'stock.route',
         string='Route'
     )
+    date_scheduled = fields.Date(
+        string='Date Scheduled',
+        readonly=False,
+    )
     modality_id = fields.Many2one(
         'stock.picking.modality',
         string='Modality'
@@ -90,7 +94,7 @@ class PartialDeliveryWizard(models.TransientModel):
                     'price_unit': sale_order_line.price_unit,
                     'name': sale_order_line.name,
                     'state_planning': 'in_stock',
-                    'date_scheduled': fields.Datetime.now() + timedelta(days=1),
+                    'date_scheduled': self.date_scheduled,
                     'route_id': self.route_id.id,
                     'modality_id': self.modality_id.id,
                     'destiny_id': self.destiny_id.id,
@@ -98,28 +102,13 @@ class PartialDeliveryWizard(models.TransientModel):
                 })],
             })
 
-            new_sale_order.action_confirm()
-
-            new_sale_order_line = new_sale_order.order_line[0]
-            print("*" * 20, new_sale_order_line.state_planning)
-            # Ensure the new sale order line has the correct state
-            new_sale_order_line.state_planning = 'in_stock'
-            print("*" * 20, new_sale_order_line.state_planning)
-
-            # purchase_order = self.env['purchase.order'].search([
-            #     ('origin', '=', new_sale_order.name),
-            # ], limit=1)
+            # new_sale_order.action_confirm()
             #
-            # if purchase_order:
-            #     purchase_order.button_cancel()
-            #
-            # delivery_order = self.env['stock.picking'].search([
-            #     ('origin', '=', new_sale_order.name),
-            #     ('state', '=', 'waiting'),
-            # ], limit=1)
-            #
-            # if delivery_order:
-            #     delivery_order.action_assign()
+            # new_sale_order_line = new_sale_order.order_line[0]
+            # print("*" * 20, new_sale_order_line.state_planning)
+            # # Ensure the new sale order line has the correct state
+            # new_sale_order_line.state_planning = 'in_stock'
+            # print("*" * 20, new_sale_order_line.state_planning)
 
             sale_order_line.state = 'done'
 

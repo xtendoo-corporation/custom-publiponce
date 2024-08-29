@@ -7,6 +7,7 @@
                 <group>
                     <field name="cantidad_entregada"/>
                     <field name="route_id"/>
+                    <field name="date_scheduled"/>
                     <field name="modality_id"/>
                     <field name="destiny_id"/>
                     <field name="zone_id"/>

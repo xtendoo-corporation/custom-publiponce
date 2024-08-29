@@ -6,8 +6,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 16.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2024-08-16 09:10+0000\n"
-"PO-Revision-Date: 2024-08-16 09:10+0000\n"
+"POT-Creation-Date: 2024-08-29 07:34+0000\n"
+"PO-Revision-Date: 2024-08-29 07:34+0000\n"
 "Last-Translator: \n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
@@ -106,9 +106,15 @@ msgid "Customer"
 msgstr "Cliente"
 
 #. module: stock_picking_modality
+#: model:ir.model.fields,field_description:stock_picking_modality.field_partial_delivery_wizard__date_scheduled
 #: model:ir.model.fields,field_description:stock_picking_modality.field_sale_order_line__date_scheduled
 msgid "Date Scheduled"
 msgstr "Fecha planificada"
+
+#. module: stock_picking_modality
+#: model:ir.model.fields,field_description:stock_picking_modality.field_sale_order_line__date_scheduled_time
+msgid "Date Scheduled Time"
+msgstr "Fecha hora programada"
 
 #. module: stock_picking_modality
 #: model:ir.actions.server,name:stock_picking_modality.action_deliver_products
@@ -172,7 +178,8 @@ msgstr ""
 #. module: stock_picking_modality
 #: model_terms:ir.actions.act_window,help:stock_picking_modality.action_sale_order_line_planning
 msgid "Here you can create and manage your stock move planning."
-msgstr "Aqui puedes crear y gestionar tu planificación de movimientos de stock."
+msgstr ""
+"Aqui puedes crear y gestionar tu planificación de movimientos de stock."
 
 #. module: stock_picking_modality
 #: model:ir.model.fields,field_description:stock_picking_modality.field_partial_delivery_wizard__id
@@ -197,6 +204,11 @@ msgstr "En stock"
 #: model:ir.model.fields.selection,name:stock_picking_modality.selection__sale_order_line__state_planning__in_van
 msgid "In van"
 msgstr "En furgón"
+
+#. module: stock_picking_modality
+#: model_terms:ir.ui.view,arch_db:stock_picking_modality.view_sale_order_line_planning_form
+msgid "Ir al Pedido"
+msgstr ""
 
 #. module: stock_picking_modality
 #: model:ir.model.fields,field_description:stock_picking_modality.field_res_partner__is_resource
@@ -306,7 +318,7 @@ msgstr "Parcialmente en stock"
 #. module: stock_picking_modality
 #: model:ir.model.fields,field_description:stock_picking_modality.field_sale_order_line__partner_color
 msgid "Partner Color"
-msgstr ""
+msgstr "Color del contacto"
 
 #. module: stock_picking_modality
 #: model:ir.actions.act_window,name:stock_picking_modality.action_sale_order_line_planning

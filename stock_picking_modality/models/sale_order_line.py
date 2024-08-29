@@ -7,8 +7,9 @@ from odoo.exceptions import ValidationError
 
 
 class SaleOrderLine(models.Model):
-    _inherit = 'sale.order.line'
-    # _inherit = ['sale.order.line', 'mail.thread', 'mail.activity.mixin']
+    # _inherit = 'sale.order.line'
+    _name = 'sale.order.line'
+    _inherit = ['sale.order.line', 'mail.thread', 'mail.activity.mixin']
 
     name = fields.Char(
         string='Stock Move Planning',
@@ -32,7 +33,6 @@ class SaleOrderLine(models.Model):
     )
     date_scheduled = fields.Date(
         string='Date Scheduled',
-        required=True,
         readonly=False,
     )
     date_scheduled_time = fields.Datetime(
@@ -112,7 +112,7 @@ class SaleOrderLine(models.Model):
     @api.model
     def create(self, vals):
         # Set default date_scheduled_time to date_scheduled at 08:00:00
-        if 'date_scheduled' in vals:
+        if 'date_scheduled' in vals and vals['date_scheduled']:
             date_scheduled = fields.Date.from_string(vals['date_scheduled'])
             date_scheduled_time = datetime.combine(date_scheduled, datetime.min.time()) + timedelta(hours=8)
             while self.search([('date_scheduled_time', '=', date_scheduled_time)]):
@@ -122,7 +122,8 @@ class SaleOrderLine(models.Model):
         if 'product_id' in vals and 'date_scheduled' in vals:
             existing_line = self.search([
                 ('product_id', '=', vals['product_id']),
-                ('date_scheduled', '=', vals['date_scheduled'])
+                ('date_scheduled', '=', vals['date_scheduled']),
+                ('state_planning', '!=', 'delivered')
             ])
             if existing_line:
                 raise ValidationError("No pueden haber dos líneas con el mismo producto en la misma fecha planificada.")
@@ -137,14 +138,21 @@ class SaleOrderLine(models.Model):
         return record
 
     def write(self, vals):
-        if 'product_id' in vals or 'date_scheduled' in vals:
+        if 'product_id' in vals or 'date_scheduled' in vals and vals['date_scheduled']:
             for line in self:
                 product_id = vals.get('product_id', line.product_id.id)
                 date_scheduled = vals.get('date_scheduled', line.date_scheduled)
+                if isinstance(date_scheduled, str):
+                    date_scheduled = fields.Date.from_string(date_scheduled)
+                date_scheduled_time = datetime.combine(date_scheduled, datetime.min.time()) + timedelta(hours=8)
+                while self.search([('date_scheduled_time', '=', date_scheduled_time)]):
+                    date_scheduled_time += timedelta(hours=1)
+                vals['date_scheduled_time'] = date_scheduled_time
                 existing_line = self.search([
                     ('product_id', '=', product_id),
                     ('date_scheduled', '=', date_scheduled),
-                    ('id', '!=', line.id)
+                    ('id', '!=', line.id),
+                    ('state_planning', '!=', 'delivered')
                 ])
                 if existing_line:
                     raise ValidationError(
@@ -388,6 +396,15 @@ class SaleOrderLine(models.Model):
             },
         }
 
+    def action_view_sale_order(self):
+        return {
+            'type': 'ir.actions.act_window',
+            'name': 'Sale Order',
+            'res_model': 'sale.order',
+            'view_mode': 'form',
+            'res_id': self.order_id.id,
+            'target': 'current',
+        }
 
     @api.depends('move_ids.move_line_ids.qty_done', 'move_ids.quantity_done')
     def _compute_state_planning(self):
