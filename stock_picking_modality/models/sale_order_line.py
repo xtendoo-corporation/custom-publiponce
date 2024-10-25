@@ -18,14 +18,17 @@ class SaleOrderLine(models.Model):
     modality_id = fields.Many2one(
         comodel_name='stock.picking.modality',
         string='Modality',
+        required=True,
     )
     destiny_id = fields.Many2one(
         comodel_name='stock.picking.destiny',
         string='Destiny',
+        required=True,
     )
     zone_id = fields.Many2one(
         comodel_name='stock.picking.zone',
         string='Zone',
+        required=True,
     )
     price_fee = fields.Float(
         comodel_name='stock.picking.modality.destiny.price',
@@ -34,6 +37,7 @@ class SaleOrderLine(models.Model):
     date_scheduled = fields.Date(
         string='Date Scheduled',
         readonly=False,
+        required=True,
     )
     date_scheduled_time = fields.Datetime(
         string='Date Scheduled Time',
@@ -77,6 +81,11 @@ class SaleOrderLine(models.Model):
         default='waiting_reception',
         store=True,
         compute='_compute_state_planning'
+    )
+    route_id = fields.Many2one(
+        'stock.route',
+        string='Route',
+        required=True,
     )
 
 

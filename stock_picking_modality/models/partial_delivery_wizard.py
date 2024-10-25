@@ -19,7 +19,8 @@ class PartialDeliveryWizard(models.TransientModel):
     )
     route_id = fields.Many2one(
         'stock.route',
-        string='Route'
+        string='Route',
+        required=True,
     )
     date_scheduled = fields.Date(
         string='Date Scheduled',
@@ -27,15 +28,18 @@ class PartialDeliveryWizard(models.TransientModel):
     )
     modality_id = fields.Many2one(
         'stock.picking.modality',
-        string='Modality'
+        string='Modality',
+        required=True,
     )
     destiny_id = fields.Many2one(
         'stock.picking.destiny',
-        string='Destiny'
+        string='Destiny',
+        required=True,
     )
     zone_id = fields.Many2one(
         'stock.picking.zone',
-        string='Zone'
+        string='Zone',
+        required=True,
     )
 
     def action_confirm_partial_delivery(self):
