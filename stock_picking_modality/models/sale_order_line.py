@@ -3,7 +3,7 @@
 from datetime import timedelta, datetime
 
 from odoo import api, fields, models
-from odoo.exceptions import ValidationError
+from odoo.exceptions import UserError, ValidationError
 
 
 class SaleOrderLine(models.Model):
@@ -85,7 +85,6 @@ class SaleOrderLine(models.Model):
     route_id = fields.Many2one(
         'stock.route',
         string='Route',
-        required=True,
     )
 
 
@@ -111,15 +110,17 @@ class SaleOrderLine(models.Model):
             else:
                 record.in_stock = False
 
-    # @api.model
-    # def create(self, vals):
-    #     record = super(SaleOrderLine, self).create(vals)
-    #     if record.partner_id and record.partner_id not in record.tag_ids:
-    #         record.tag_ids = [(4, record.partner_id.id)]
-    #     return record
+    @api.onchange('state')
+    def _onchange_state(self):
+        """Limpia el campo route_id si el estado vuelve a borrador."""
+        if self.state == 'draft':
+            self.route_id = False
 
     @api.model
     def create(self, vals):
+        # Validación: si el estado es 'sale', `route_id` es obligatorio
+        if vals.get('state') == 'draft' and not vals.get('route_id'):
+            raise UserError("El campo Ruta es obligatorio cuando se crea un pedido de venta.")
         # Set default date_scheduled_time to date_scheduled at 08:00:00
         if 'date_scheduled' in vals and vals['date_scheduled']:
             date_scheduled = fields.Date.from_string(vals['date_scheduled'])
@@ -146,7 +147,11 @@ class SaleOrderLine(models.Model):
 
         return record
 
+
     def write(self, vals):
+        for line in self:
+            if (vals.get('state') == 'draft' or line.state == 'draft') and not vals.get('route_id', line.route_id):
+                raise UserError("El campo Ruta es obligatorio para confirmar el pedido de venta.")
         if 'product_id' in vals or 'date_scheduled' in vals and vals['date_scheduled']:
             for line in self:
                 product_id = vals.get('product_id', line.product_id.id)
@@ -194,25 +199,6 @@ class SaleOrderLine(models.Model):
         else:
             self.price_fee = 0
 
-    # @api.onchange('modality_id')
-    # def _onchange_modality_id(self):
-    #     if self.modality_id:
-    #         destiny_ids = self.env['stock.picking.modality.destiny.price'].search(
-    #             [('modality_id', '=', self.modality_id.id)]).mapped('destiny_id.id')
-    #         if self.destiny_id.id not in destiny_ids:
-    #             self.destiny_id = False
-    #         return {
-    #             'domain': {
-    #                 'destiny_id': [('id', 'in', destiny_ids)]
-    #             }
-    #         }
-    #     else:
-    #         self.destiny_id = False
-    #         return {
-    #             'domain': {
-    #                 'destiny_id': []
-    #             }
-    #         }
 
     @api.onchange('modality_id', 'date_scheduled', 'route_id')
     def _onchange_modality_id(self):
